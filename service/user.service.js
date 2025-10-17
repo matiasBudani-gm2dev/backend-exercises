@@ -38,7 +38,6 @@ export function createNewUser(userData){
 }
 
 export function updateUserComplete(id, userData){
-    console.log(userData)
     if(existsByEmail(userData.email)){
         throw createError(409, "Conflict Error", "El email ya existe" )
     }
