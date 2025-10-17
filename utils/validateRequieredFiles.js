@@ -5,8 +5,6 @@ export function validateRequiredFiles(req, requiredFiles){
     }
 
     for(const file of requiredFiles){
-        console.log(file)
-        console.log(req.body[file])
         if(!req.body[file]){
             return false
         }

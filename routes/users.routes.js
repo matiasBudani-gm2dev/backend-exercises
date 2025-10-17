@@ -1,18 +1,26 @@
 import express from 'express';
 const userRouter = express.Router();
 
-import {getAllUsers, findUserById ,addUser, updateUserById, deleteUserById, emailExists } from '../data/users.js';
 
+//repository
+import * as userRepository from "../repository/users.repository.js";
+
+//model
+import { createUser, getUserWithoutPassword, getUsersWithoutPassword } from
+"../models/user.model.js";
+
+//utils
 import { validateRequiredFiles } from '../utils/validateRequieredFiles.js';
 import {isValidEmail} from '../utils/isValidEmail.js';
 import {isValidPassword} from '../utils/isValidPassword.js';
+import { validateAtLeastOneField } from '../utils/validateAtLeastOneField.js';
 
 
 userRouter.get('/', (req, res, next ) => {
     try{
-        const user = getAllUsers()
-        const showUser = user.map(({id, createdAt, nombre, email}) => ({id, createdAt, nombre,  email}))
-        res.status(200).send(showUser)
+        const users = userRepository.findAll()
+        const showUsers = getUsersWithoutPassword(users)
+        res.status(200).send(showUsers)
     }
     catch(error){
         next(error)
@@ -21,12 +29,12 @@ userRouter.get('/', (req, res, next ) => {
 
 userRouter.get('/:id', (req, res) => {
     try{
-        if(!findUserById(Number(req.params.id))){
+        if(!userRepository.findUserById(Number(req.params.id))){
             res.status(404).send("Usuario no encontrado")
         }else{ 
-            const user = findUserById(Number(req.params.id))
-            const showUser = ({id, createdAt, nombre, email}) => ({id, createdAt, nombre, email})
-            res.status(200).send(showUser(user))
+            const user = userRepository.findUserById(Number(req.params.id))
+            const showUser = getUserWithoutPassword(user)
+            res.status(200).send(showUser)
         }
     }catch(error){
         next(error)
@@ -36,8 +44,6 @@ userRouter.get('/:id', (req, res) => {
 
 userRouter.post('/', (req, res, next) => {
     try{
-        const id = Date.now();
-        const createdAt = new Date().toISOString()
         const {nombre, email, password} = req.body;
         if(!validateRequiredFiles(req, ['nombre', 'email', 'password'])){
             res.status(400).send("Faltan datos")    
@@ -45,12 +51,16 @@ userRouter.post('/', (req, res, next) => {
         else if(!isValidEmail(email)){
             res.status(400).send("El mail no es valido")
         }
+        else if(userRepository.existsByEmail(email)){
+            res.status(409).send("El email ya está registrado")
+        }
         else if(!isValidPassword(password)){
             res.status(400).send("La contraseña debe tener al menos 6 caracteres y ser una cadena de texto")
         }
         else{
-            addUser({id, createdAt, nombre,  email, password})
-            const showUser = {id, createdAt, nombre, email}
+            const user = createUser({nombre, email, password})
+            userRepository.save(user)
+            const showUser = getUserWithoutPassword(user)
             res.status(201).send(showUser)
         }
     }catch(error){
@@ -61,7 +71,7 @@ userRouter.post('/', (req, res, next) => {
 
 userRouter.put('/:id', (req, res, next) => {
     try{
-        if(!findUserById(Number(req.params.id))){
+        if(!userRepository.findUserById(Number(req.params.id))){
             res.status(404).send("Usuario no encontrado")
         }else{ 
             const {nombre, email} = req.body;
@@ -71,11 +81,13 @@ userRouter.put('/:id', (req, res, next) => {
             else if(!isValidEmail(email)){
                 res.status(400).send("El mail no es valido")
             }
+            else if(userRepository.existsByEmail(email)){
+                res.status(409).send("El email ya está registrado")
+            }
             else{
-                updateUserById(Number(req.params.id), {nombre, email})
-                const user = findUserById(Number(req.params.id))
-                const showUser = ({id, createdAt, nombre, email}) => ({id, createdAt, nombre, email})
-                res.status(200).send(showUser(user))
+                const user = userRepository.updateUserById(Number(req.params.id), {nombre, email})
+                const showUser = getUserWithoutPassword(user)
+                res.status(200).send(showUser)
             }
         }
     }catch(error){
@@ -86,21 +98,23 @@ userRouter.put('/:id', (req, res, next) => {
 
 userRouter.patch('/:id', (req, res, next) => {
     try{   
-        if(!findUserById(Number(req.params.id))){
+        if(!userRepository.findUserById(Number(req.params.id))){
             res.status(404).send("Usuario no encontrado")
         }else{ 
             const {nombre, email} = req.body;
-            if(!validateRequiredFiles(req, ['nombre', 'email'])){
-                res.status(400).send("Faltan datos")    
+            if(!validateAtLeastOneField(req, ['nombre', 'email'])){
+                res.status(400).send("Faltan datos reales")    
             }
-            else if(!isValidEmail(email)){
+            else if(email && !isValidEmail(email)){
                 res.status(400).send("El mail no es valido")
             }
+            else if(userRepository.existsByEmail(email)){
+                res.status(409).send("El email ya está registrado")
+            }
             else{
-                updateUserById(Number(req.params.id), {nombre, email})
-                const user = findUserById(Number(req.params.id))
-                const showUser = ({id, createdAt, nombre, email}) => ({id, createdAt, nombre, email})
-                res.status(200).send(showUser(user))
+                const user = userRepository.updateUserById(Number(req.params.id), {nombre, email})
+                const showUser = getUserWithoutPassword(user)
+                res.status(200).send(showUser)
             }
         }
     }catch(error){
@@ -110,14 +124,14 @@ userRouter.patch('/:id', (req, res, next) => {
 
 userRouter.delete('/:id', (req, res, next) => { 
     try{ 
-        if(!findUserById(Number(req.params.id))){
+        if(!userRepository.findUserById(Number(req.params.id))){
             res.status(404).send("Usuario no encontrado")
         }
         else{
-            deleteUserById(Number(req.params.id))
+            userRepository.deleteUserById(Number(req.params.id))
             const user = findUserById(Number(req.params.id))
-            const showUser = ({id, createdAt, nombre, email}) => ({id, createdAt, nombre, email})
-            res.status(200).send(showUser(user))
+            const showUser = getUserWithoutPassword(user)
+            res.status(200).send(showUser)
         }
      }
     catch(error){
