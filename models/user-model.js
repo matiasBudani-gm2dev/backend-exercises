@@ -1,10 +1,16 @@
-export function createUser(userData){
-    const id = Date.now()
-    const createdAt = new Date().toISOString()
+export function validatePassword(password){
+    if(password.length < 6){
+        return false
+    }
+    return true
+}
 
-
-    return {id, createdAt, ...userData} 
-
+export function createUser(userDTO){
+    return {
+        "nombre" : userDTO.nombre,
+        "email": userDTO.email,
+        "password": userDTO.password
+    }
 }
 
 export function getUsersWithoutPassword(users){

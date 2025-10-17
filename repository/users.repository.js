@@ -16,7 +16,19 @@ export function findByEmail(email){
 }
 
 export function existsByEmail(email){
-    return users.some(user => user.email === email)
+    if(users.some(user => user.email === email)){
+        return "Usuario encontrado"
+    }
+
+    return null
+}
+
+export function createSavedUser(user){
+    const id = Date.now()
+    const createdAt = new Date().toISOString()
+
+    const newUser = {id, createdAt, ...user}
+    return newUser
 }
 
 export function save(user){
@@ -26,18 +38,19 @@ export function save(user){
 
 export function updateUserById(id, newUserData){
 
+    console.log(newUserData)
+
     for (const [key, value] of Object.entries(newUserData)) {
         if(value === undefined){
             delete newUserData[key]
         }
     }
 
-    const userIndex = users.findIndex(user => user.id === id)
+    const user = findUserById(id)
 
-    users[userIndex] = {...users[userIndex], ...newUserData}
+    console.log(user)
 
-
-    return users[userIndex]
+    return user
 
 }
 
