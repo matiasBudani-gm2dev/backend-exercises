@@ -83,24 +83,16 @@ userRouter.put('/:id', (req, res, next) => {
 
 userRouter.patch('/:id', (req, res, next) => {
     try{   
-        if(!userRepository.findUserById(Number(req.params.id))){
-            res.status(404).send("Usuario no encontrado")
-        }else{ 
-            const {nombre, email} = req.body;
-            if(!validateAtLeastOneField(req, ['nombre', 'email'])){
-                res.status(400).send("Faltan datos reales")    
-            }
-            else if(email && !isValidEmail(email)){
-                res.status(400).send("El mail no es valido")
-            }
-            else if(userRepository.existsByEmail(email)){
-                res.status(409).send("El email ya está registrado")
-            }
-            else{
-                const user = userRepository.updateUserById(Number(req.params.id), {nombre, email})
-                const showUser = getUserWithoutPassword(user)
-                res.status(200).send(showUser)
-            }
+        const {nombre, email} = req.body;
+        if(!validateAtLeastOneField(req, ['nombre', 'email'])){
+            res.status(400).send("Faltan datos reales")    
+        }
+        else if(email && !isValidEmail(email)){
+            res.status(400).send("El mail no es valido")
+        }
+        else{
+            const user = updateUserComplete(Number(req.params.id), {nombre, email})
+            res.status(200).send(user)
         }
     }catch(error){
         next(error)
