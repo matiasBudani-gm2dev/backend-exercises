@@ -38,17 +38,15 @@ export function save(user){
 
 export function updateUserById(id, newUserData){
 
-    console.log(newUserData)
-
     for (const [key, value] of Object.entries(newUserData)) {
         if(value === undefined){
             delete newUserData[key]
         }
     }
-
+    
     const user = findUserById(id)
 
-    console.log(user)
+    Object.assign(user, newUserData)
 
     return user
 
