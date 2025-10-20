@@ -2,14 +2,11 @@ import express from 'express';
 const userRouter = express.Router();
 
 
-//repository
-import * as userRepository from "../repository/users.repository.js";
-
 //model
 import { createUser, getUserWithoutPassword, getUsersWithoutPassword } from
 "../models/user-model.js";
 
-import { createNewUser, deleteUser, updateUserComplete } from '../service/user.service.js';
+import { getAllUsersInfo, getById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/user.service.js';
 
 //utils
 import { validateRequiredFiles } from '../utils/validateRequieredFiles.js';
@@ -17,26 +14,29 @@ import {isValidEmail} from '../utils/isValidEmail.js';
 import { validateAtLeastOneField } from '../utils/validateAtLeastOneField.js';
 
 
+const requiredFields = ["nombre", "email"]
+
+
 userRouter.get('/', (req, res, next ) => {
     try{
-        const users = userRepository.findAll()
-        const showUsers = getUsersWithoutPassword(users)
-        res.status(200).send(showUsers)
+        const users = getAllUsersInfo()
+        res.status(200).send(users)
     }
     catch(error){
         next(error)
     }
 })
 
-userRouter.get('/:id', (req, res) => {
+userRouter.get('/:id', (req, res, next) => {
     try{
-        if(!userRepository.findUserById(Number(req.params.id))){
+        const id = (Number(req.params.id))
+        if(!getById(id)){
             res.status(404).send("Usuario no encontrado")
-        }else{ 
-            const user = userRepository.findUserById(Number(req.params.id))
-            const showUser = getUserWithoutPassword(user)
-            res.status(200).send(showUser)
         }
+
+        const user = getById(id)
+        res.status(200).send(user)
+
     }catch(error){
         next(error)
     }
@@ -46,16 +46,16 @@ userRouter.get('/:id', (req, res) => {
 userRouter.post('/', (req, res, next) => {
     try{
         const {nombre, email, password} = req.body;
-        if(!validateRequiredFiles(req, ['nombre', 'email', 'password'])){
+        if(!validateRequiredFiles(req, [...requiredFields, "password"])){
             res.status(400).send("Faltan datos")    
         }
-        else if(!isValidEmail(email)){
+        if(!isValidEmail(email)){
             res.status(400).send("El mail no es valido")
         }
-        else{
-            const user = createNewUser({nombre, email, password})
-            res.status(201).send(user)
-        }
+        
+        const user = createNewUser({nombre, email, password})
+        res.status(201).send(user)
+        
     }catch(error){
         next(error)
     }
@@ -64,17 +64,18 @@ userRouter.post('/', (req, res, next) => {
 
 userRouter.put('/:id', (req, res, next) => {
     try{
+        const id = Number(req.params.id)
         const {nombre, email} = req.body;
-        if(!validateRequiredFiles(req, ['nombre', 'email'])){
+        if(!validateRequiredFiles(req, requiredFields)){
             res.status(400).send("Faltan datos")    
         }
-        else if(!isValidEmail(email)){
+        if(!isValidEmail(email)){
             res.status(400).send("El mail no es valido")
         }
-        else{
-            const user = updateUserComplete(Number(req.params.id), {nombre, email})
-            res.status(200).send(user)
-        }
+
+        const user = updateUserComplete(id, {nombre, email})
+        res.status(200).send(user)
+        
     }catch(error){
         next(error)
     }
@@ -83,17 +84,17 @@ userRouter.put('/:id', (req, res, next) => {
 
 userRouter.patch('/:id', (req, res, next) => {
     try{   
+        const id = Number(req.params.id)
         const {nombre, email} = req.body;
-        if(!validateAtLeastOneField(req, ['nombre', 'email'])){
+        if(!validateAtLeastOneField(req, requiredFields)){
             res.status(400).send("Faltan datos reales")    
         }
-        else if(email && !isValidEmail(email)){
+        if(email && !isValidEmail(email)){
             res.status(400).send("El mail no es valido")
         }
-        else{
-            const user = updateUserComplete(Number(req.params.id), {nombre, email})
+            const user = updateUserPartial(id, {nombre, email})
             res.status(200).send(user)
-        }
+        
     }catch(error){
         next(error)
     }
@@ -101,7 +102,8 @@ userRouter.patch('/:id', (req, res, next) => {
 
 userRouter.delete('/:id', (req, res, next) => { 
     try{ 
-        const user = deleteUser(Number(req.params.id))
+        const id = Number(req.params.id)
+        const user = deleteUser(id)
         res.status(200).send(user)
      }
     catch(error){

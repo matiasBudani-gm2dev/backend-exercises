@@ -1,7 +1,14 @@
 export function createError(statusCode, type, message){
+    if(statusCode && type && message){
+        return {
+            statusCode : statusCode,
+            type : type,
+            message : message
+        }
+    }
     return {
-        statusCode : statusCode,
-        type : type,
-        message : message
-    };
+        statusCode: 500,
+        type: "INTERNAL_SERVER_ERROR",
+        message: "Ocurrio un error inesperado"
+    }
 }

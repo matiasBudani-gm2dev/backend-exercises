@@ -23,7 +23,7 @@ export function existsByEmail(email){
     return null
 }
 
-export function createSavedUser(user){
+export function createUserForDB(user){
     const id = Date.now()
     const createdAt = new Date().toISOString()
 
@@ -37,12 +37,6 @@ export function save(user){
 }
 
 export function updateUserById(id, newUserData){
-
-    for (const [key, value] of Object.entries(newUserData)) {
-        if(value === undefined){
-            delete newUserData[key]
-        }
-    }
     
     const user = findUserById(id)
 
@@ -53,8 +47,5 @@ export function updateUserById(id, newUserData){
 }
 
 export function deleteUserById(id){
-    const userDeleted = findUserById(id)
     users = users.filter(user => user.id !== id)
-    if(!userDeleted) return null
-    return userDeleted
 }
