@@ -1,7 +1,7 @@
 import express from 'express';
 const userRouter = express.Router();
 
-import { getAllUsersInfo, getById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/user.service.js';
+import { getAllUsersInfo, getById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/userService.js';
 
 //utils
 import { validateRequiredFiles } from '../utils/validateRequieredFiles.js';

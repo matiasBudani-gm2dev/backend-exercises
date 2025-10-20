@@ -1,4 +1,4 @@
-import {mapError} from "/Users/gm2academy/Documents/GitHub/backend-exercises/utils/errors.mapper.js";
+import {mapError} from "../utils/errorsMapper.js"
 
 export function errorHandling(err, req, res, next) {
     console.log(err);

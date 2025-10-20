@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import userRouter from './routes/users.routes.js';
+import userRouter from './routes/usersRoutes.js';
 import {errorHandling, notFoundHandler}  from './middleware/errorHandler.js';
 
 export function createApp(){

@@ -1,4 +1,4 @@
-import { createError } from "/Users/gm2academy/Documents/GitHub/backend-exercises/utils/createError.js"
+import { createError } from "./createError.js"
 
 export function mapError(err){
     if(err.statusCode && err.type && err.message){
