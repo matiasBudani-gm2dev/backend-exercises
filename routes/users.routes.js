@@ -1,11 +1,6 @@
 import express from 'express';
 const userRouter = express.Router();
 
-
-//model
-import { createUser, getUserWithoutPassword, getUsersWithoutPassword } from
-"../models/user-model.js";
-
 import { getAllUsersInfo, getById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/user.service.js';
 
 //utils
@@ -30,13 +25,8 @@ userRouter.get('/', (req, res, next ) => {
 userRouter.get('/:id', (req, res, next) => {
     try{
         const id = (Number(req.params.id))
-        if(!getById(id)){
-            res.status(404).send("Usuario no encontrado")
-        }
-
         const user = getById(id)
         res.status(200).send(user)
-
     }catch(error){
         next(error)
     }
@@ -47,10 +37,12 @@ userRouter.post('/', (req, res, next) => {
     try{
         const {nombre, email, password} = req.body;
         if(!validateRequiredFiles(req, [...requiredFields, "password"])){
-            res.status(400).send("Faltan datos")    
+            res.status(400).send("Faltan datos")  
+            return  
         }
         if(!isValidEmail(email)){
             res.status(400).send("El mail no es valido")
+            return
         }
         
         const user = createNewUser({nombre, email, password})
@@ -68,9 +60,11 @@ userRouter.put('/:id', (req, res, next) => {
         const {nombre, email} = req.body;
         if(!validateRequiredFiles(req, requiredFields)){
             res.status(400).send("Faltan datos")    
+            return
         }
         if(!isValidEmail(email)){
             res.status(400).send("El mail no es valido")
+            return
         }
 
         const user = updateUserComplete(id, {nombre, email})
@@ -88,9 +82,11 @@ userRouter.patch('/:id', (req, res, next) => {
         const {nombre, email} = req.body;
         if(!validateAtLeastOneField(req, requiredFields)){
             res.status(400).send("Faltan datos reales")    
+            return
         }
         if(email && !isValidEmail(email)){
             res.status(400).send("El mail no es valido")
+            return
         }
             const user = updateUserPartial(id, {nombre, email})
             res.status(200).send(user)
