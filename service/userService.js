@@ -1,8 +1,8 @@
-import {createError} from "../utils/createError.js"
+import {createError} from "../utils/CreateError.js"
 
-import { createUser, validatePassword } from "../models/userModel.js";
+import { createUser, validatePassword } from "../models/UserModel.js";
 import { findAll, createUserForDB ,existsByEmail, findUserById, save, updateUserById, deleteUserById } from "../repository/usersRepository.js";
-import { getUserWithoutPassword } from "../models/userModel.js";
+import { getUserWithoutPassword } from "../models/UserModel.js";
 
 export function getUsersWithoutPassword(users){
     return users.map(({password, ...userWithoutPassword}) => userWithoutPassword)

@@ -1,12 +1,12 @@
 import express from 'express';
 const userRouter = express.Router();
 
-import { getAllUsersInfo, getById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/userService.js';
+import { getAllUsersInfo, getById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/UserService.js';
 
 //utils
-import { validateRequiredFiles } from '../utils/validateRequieredFiles.js';
-import {isValidEmail} from '../utils/isValidEmail.js';
-import { validateAtLeastOneField } from '../utils/validateAtLeastOneField.js';
+import { validateRequiredFiles } from '../utils/ValidateRequieredFiles.js';
+import {isValidEmail} from '../utils/IsValidEmail.js';
+import { validateAtLeastOneField } from '../utils/ValidateAtLeastOneField.js';
 
 
 const requiredFields = ["name", "email"]
