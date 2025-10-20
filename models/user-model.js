@@ -13,10 +13,6 @@ export function createUser(userDTO){
     }
 }
 
-export function getUsersWithoutPassword(users){
-    return users.map(({password, ...userWithoutPassword}) => userWithoutPassword)
-}
-
 export function getUserWithoutPassword(user){
     if(!user) return null
     const { password, ...userWithoutPassword } = user

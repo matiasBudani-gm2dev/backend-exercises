@@ -1,13 +1,16 @@
 import {createError} from "/Users/gm2academy/Documents/GitHub/backend-exercises/utils/createError.js";
 
-import { createUser, getUsersWithoutPassword, validatePassword } from "../models/user-model.js";
+import { createUser, validatePassword } from "../models/user-model.js";
 import { findAll, createUserForDB ,existsByEmail, findUserById, save, updateUserById, deleteUserById } from "../repository/users.repository.js";
 import { getUserWithoutPassword } from "../models/user-model.js";
+
+export function getUsersWithoutPassword(users){
+    return users.map(({password, ...userWithoutPassword}) => userWithoutPassword)
+}
 
 export function getAllUsersInfo(){
     const users = findAll()
     return getUsersWithoutPassword(users)
-    
 }
 
 export function getById(id){
