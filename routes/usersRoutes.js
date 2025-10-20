@@ -81,7 +81,7 @@ userRouter.patch('/:id', (req, res, next) => {
         const id = Number(req.params.id)
         const {name, email} = req.body;
         if(!validateAtLeastOneField(req, requiredFields)){
-            res.status(400).send("Missing data reales")    
+            res.status(400).send("Missing data")    
             return
         }
         if(email && !isValidEmail(email)){
