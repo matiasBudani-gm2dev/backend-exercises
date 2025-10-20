@@ -9,7 +9,7 @@ import {isValidEmail} from '../utils/isValidEmail.js';
 import { validateAtLeastOneField } from '../utils/validateAtLeastOneField.js';
 
 
-const requiredFields = ["nombre", "email"]
+const requiredFields = ["name", "email"]
 
 
 userRouter.get('/', (req, res, next ) => {
@@ -35,17 +35,17 @@ userRouter.get('/:id', (req, res, next) => {
 
 userRouter.post('/', (req, res, next) => {
     try{
-        const {nombre, email, password} = req.body;
+        const {name, email, password} = req.body;
         if(!validateRequiredFiles(req, [...requiredFields, "password"])){
-            res.status(400).send("Faltan datos")  
+            res.status(400).send("Missing data")  
             return  
         }
         if(!isValidEmail(email)){
-            res.status(400).send("El mail no es valido")
+            res.status(400).send("Invalid email")
             return
         }
         
-        const user = createNewUser({nombre, email, password})
+        const user = createNewUser({name, email, password})
         res.status(201).send(user)
         
     }catch(error){
@@ -57,17 +57,17 @@ userRouter.post('/', (req, res, next) => {
 userRouter.put('/:id', (req, res, next) => {
     try{
         const id = Number(req.params.id)
-        const {nombre, email} = req.body;
+        const {name, email} = req.body;
         if(!validateRequiredFiles(req, requiredFields)){
-            res.status(400).send("Faltan datos")    
+            res.status(400).send("Missing data")    
             return
         }
         if(!isValidEmail(email)){
-            res.status(400).send("El mail no es valido")
+            res.status(400).send("Invalid email")
             return
         }
 
-        const user = updateUserComplete(id, {nombre, email})
+        const user = updateUserComplete(id, {name, email})
         res.status(200).send(user)
         
     }catch(error){
@@ -79,16 +79,16 @@ userRouter.put('/:id', (req, res, next) => {
 userRouter.patch('/:id', (req, res, next) => {
     try{   
         const id = Number(req.params.id)
-        const {nombre, email} = req.body;
+        const {name, email} = req.body;
         if(!validateAtLeastOneField(req, requiredFields)){
-            res.status(400).send("Faltan datos reales")    
+            res.status(400).send("Missing data reales")    
             return
         }
         if(email && !isValidEmail(email)){
-            res.status(400).send("El mail no es valido")
+            res.status(400).send("Invalid email")
             return
         }
-            const user = updateUserPartial(id, {nombre, email})
+            const user = updateUserPartial(id, {name, email})
             res.status(200).send(user)
         
     }catch(error){

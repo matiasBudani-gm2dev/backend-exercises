@@ -18,7 +18,7 @@ export function notFoundHandler (req, res, next) {
     res.status(404).json({
         error: {
             type: "Not Found",
-            message: "La ruta solicitada no existe"
+            message: "The requested route does not exist"
         }
     });
 }

@@ -16,7 +16,7 @@ export function getAllUsersInfo(){
 export function getById(id){
     const user = findUserById(id)
     if(!user){
-        throw createError(404, "Usuario no encontrado", "Not Found")
+        throw createError(404, "User not found", "Not Found")
     }
     return getUserWithoutPassword(user)
 
@@ -24,7 +24,7 @@ export function getById(id){
 
 export function createNewUser(userData){
     if(!validatePassword(userData.password)){
-        throw createError(400, "Bad Request", "La contrasenia debe tener un minimo de 6 caracteres")
+        throw createError(400, "Bad Request", "The password needs to have at least 6 characters")
     }
     if(existsByEmail(userData.email)){
         throw createError(409, "Conflict Error", "El email ya existe" )
@@ -41,10 +41,10 @@ export function createNewUser(userData){
 
 export function updateUserComplete(id, userData){
     if(existsByEmail(userData.email)){
-        throw createError(409, "Conflict Error", "El email ya existe" )
+        throw createError(409, "Conflict Error", "Existing email" )
     }
     if(!findUserById(id)){
-        throw createError(404, "Not found", "El usuario no existe")
+        throw createError(404, "Not found", "User not found")
     }
 
     const user = updateUserById(id, userData)
@@ -54,10 +54,10 @@ export function updateUserComplete(id, userData){
 
 export function updateUserPartial(id, userData){
     if(existsByEmail(userData.email)){
-        throw createError(409, "Conflict Error", "El email ya existe" )
+        throw createError(409, "Conflict Error", "Existing email" )
     }
     if(!findUserById(id)){
-        throw createError(404, "Not found", "El usuario no existe")
+        throw createError(404, "Not found", "User not found")
     }
 
     for (const [key, value] of Object.entries(userData)) {

@@ -7,7 +7,7 @@ export function validatePassword(password){
 
 export function createUser(userDTO){
     return {
-        "nombre" : userDTO.nombre,
+        "name" : userDTO.name,
         "email": userDTO.email,
         "password": userDTO.password
     }

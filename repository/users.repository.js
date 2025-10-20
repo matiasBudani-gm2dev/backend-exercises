@@ -10,14 +10,14 @@ export function findUserById(id){
 
 export function findByEmail(email){
     if(users.find(user => user.email === email)){
-        return "Usuario encontrado"
+        return "User founded"
     }
     return undefined
 }
 
 export function existsByEmail(email){
     if(users.some(user => user.email === email)){
-        return "Usuario encontrado"
+        return "User founded"
     }
 
     return null

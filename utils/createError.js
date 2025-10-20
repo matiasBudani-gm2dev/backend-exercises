@@ -9,6 +9,6 @@ export function createError(statusCode, type, message){
     return {
         statusCode: 500,
         type: "INTERNAL_SERVER_ERROR",
-        message: "Ocurrio un error inesperado"
+        message: "Unexpected error"
     }
 }
