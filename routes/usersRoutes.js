@@ -9,7 +9,7 @@ import {isValidEmail} from '../utils/IsValidEmail.js';
 import { validateAtLeastOneField } from '../utils/ValidateAtLeastOneField.js';
 
 
-const requiredFields = ["user_name", "email", "id_role"]
+const requiredFields = ["user_name", "email"]
 
 
 userRouter.get('/', async (req, res, next ) => {
@@ -35,7 +35,7 @@ userRouter.get('/:id', async (req, res, next) => {
 
 userRouter.post('/', async (req, res, next) => {
     try{
-        const {user_name, email, password, id_role} = req.body
+        const {user_name, email, password} = req.body
         if(!validateRequiredFiles(req, [...requiredFields, "password"])){
             res.status(400).send("Missing data")  
             return  
@@ -44,7 +44,7 @@ userRouter.post('/', async (req, res, next) => {
             res.status(400).send("Invalid email")
             return
         }
-        const user = await createNewUser({user_name, email, password, id_role})
+        const user = await createNewUser({user_name, email, password })
         res.status(201).send(user)
         
     }catch(error){
@@ -56,7 +56,7 @@ userRouter.post('/', async (req, res, next) => {
 userRouter.put('/:id', async (req, res, next) => {
     try{
         const id = Number(req.params.id)
-        const {user_name, email, id_role} = req.body;
+        const {user_name, email } = req.body;
         if(!validateRequiredFiles(req, requiredFields)){
             res.status(400).send("Missing data")    
             return
@@ -66,7 +66,7 @@ userRouter.put('/:id', async (req, res, next) => {
             return
         }
 
-        const user = await updateUserComplete(id, {user_name, email, id_role})
+        const user = await updateUserComplete(id, {user_name, email })
         res.status(200).send(user)
         
     }catch(error){
@@ -78,7 +78,7 @@ userRouter.put('/:id', async (req, res, next) => {
 userRouter.patch('/:id', async (req, res, next) => {
     try{   
         const id = Number(req.params.id)
-        const {user_name, email, id_role} = req.body;
+        const {user_name, email } = req.body;
         if(!validateAtLeastOneField(req, requiredFields)){
             res.status(400).send("Missing data")    
             return
@@ -87,7 +87,7 @@ userRouter.patch('/:id', async (req, res, next) => {
             res.status(400).send("Invalid email")
             return
         }
-            const user = await updateUserPartial(id, {user_name, email, id_role})
+            const user = await updateUserPartial(id, {user_name, email})
             res.status(200).send(user)
         
     }catch(error){

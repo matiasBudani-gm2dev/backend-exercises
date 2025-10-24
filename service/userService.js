@@ -2,8 +2,6 @@ import {createError} from "../utils/CreateError.js"
 
 import { createUser, validatePassword, updateUser, getUserWithoutPassword} from "../models/UserModel.js";
 import { findAllUsers ,findByEmail, findUserById, saveUser, updateUserById, deleteUserById } from "../repository/usersRepository.js";
-import { findRoleById } from "../repository/RolesRepository.js";
-
 
 export async function getUsersWithoutPassword(users){
     return users.map(({password, ...userWithoutPassword}) => userWithoutPassword)
@@ -40,12 +38,6 @@ export async function createNewUser(userData){
         throw createError(500, 'Internal Server Error', "User not created")
     }
 
-    const idRoleExists = await findRoleById(userData.id_role)
-
-    if(!idRoleExists){
-        throw createError(400, "Bad request", "Role not found")
-    }
-
     const userCreatedId = await saveUser(newUser) //saveUser() devuelve el ID del usuario creado
 
     const safeUser = await getUserById(userCreatedId)
@@ -64,15 +56,8 @@ export async function updateUserComplete(id, userData){
         throw createError(404, "Not found", "User not found")
     }
 
-    const idRoleExists = await findRoleById(userData.id_role)
-
-    if(!idRoleExists){
-        throw createError(400, "Bad request", "Id role not found")
-    }
-
 
     const user = await updateUser(userData)
-
 
     await updateUserById(id, user)
 
@@ -94,13 +79,6 @@ export async function updateUserPartial(id, userData){
     if(!(await findUserById(id))){
         throw createError(404, "Not found", "User not found")
     }
-    
-    const idRoleExists = await findRoleById(userData.id_role)
-
-    if(!idRoleExists && userData.id_role !== null){
-        throw createError(400, "Bad request", "Id role not found")
-    }
-
     const user = await updateUser(userData)
 
 

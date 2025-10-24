@@ -10,7 +10,6 @@ export async function createUser(userDTO){
         "userName" : userDTO.user_name,
         "email": userDTO.email,
         "password": userDTO.password,
-        "idRole" : userDTO.idRole
     }
 }
 
@@ -18,7 +17,6 @@ export async function updateUser(userDTO){
     return{
         "userName" : userDTO.user_name,
         "email" : userDTO.email,
-        "idRole" : userDTO.id_role
     }
 }
 
