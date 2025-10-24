@@ -1,7 +1,7 @@
 import express from 'express';
 const userRouter = express.Router();
 
-import { getAllUsersInfo, getById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/UserService.js';
+import { getAllUsersInfo, getUserById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/UserService.js';
 
 //utils
 import { validateRequiredFiles } from '../utils/ValidateRequieredFiles.js';
@@ -9,12 +9,12 @@ import {isValidEmail} from '../utils/IsValidEmail.js';
 import { validateAtLeastOneField } from '../utils/ValidateAtLeastOneField.js';
 
 
-const requiredFields = ["name", "email"]
+const requiredFields = ["user_name", "email", "id_role"]
 
 
-userRouter.get('/', (req, res, next ) => {
+userRouter.get('/', async (req, res, next ) => {
     try{
-        const users = getAllUsersInfo()
+        const users = await getAllUsersInfo()
         res.status(200).send(users)
     }
     catch(error){
@@ -22,10 +22,10 @@ userRouter.get('/', (req, res, next ) => {
     }
 })
 
-userRouter.get('/:id', (req, res, next) => {
+userRouter.get('/:id', async (req, res, next) => {
     try{
         const id = (Number(req.params.id))
-        const user = getById(id)
+        const user = await getUserById(id)
         res.status(200).send(user)
     }catch(error){
         next(error)
@@ -33,9 +33,9 @@ userRouter.get('/:id', (req, res, next) => {
 })
 
 
-userRouter.post('/', (req, res, next) => {
+userRouter.post('/', async (req, res, next) => {
     try{
-        const {name, email, password} = req.body;
+        const {user_name, email, password, id_role} = req.body
         if(!validateRequiredFiles(req, [...requiredFields, "password"])){
             res.status(400).send("Missing data")  
             return  
@@ -44,8 +44,7 @@ userRouter.post('/', (req, res, next) => {
             res.status(400).send("Invalid email")
             return
         }
-        
-        const user = createNewUser({name, email, password})
+        const user = await createNewUser({user_name, email, password, id_role})
         res.status(201).send(user)
         
     }catch(error){
@@ -54,10 +53,10 @@ userRouter.post('/', (req, res, next) => {
 })
 
 
-userRouter.put('/:id', (req, res, next) => {
+userRouter.put('/:id', async (req, res, next) => {
     try{
         const id = Number(req.params.id)
-        const {name, email} = req.body;
+        const {user_name, email, id_role} = req.body;
         if(!validateRequiredFiles(req, requiredFields)){
             res.status(400).send("Missing data")    
             return
@@ -67,7 +66,7 @@ userRouter.put('/:id', (req, res, next) => {
             return
         }
 
-        const user = updateUserComplete(id, {name, email})
+        const user = await updateUserComplete(id, {user_name, email, id_role})
         res.status(200).send(user)
         
     }catch(error){
@@ -76,10 +75,10 @@ userRouter.put('/:id', (req, res, next) => {
 })
 
 
-userRouter.patch('/:id', (req, res, next) => {
+userRouter.patch('/:id', async (req, res, next) => {
     try{   
         const id = Number(req.params.id)
-        const {name, email} = req.body;
+        const {user_name, email, id_role} = req.body;
         if(!validateAtLeastOneField(req, requiredFields)){
             res.status(400).send("Missing data")    
             return
@@ -88,7 +87,7 @@ userRouter.patch('/:id', (req, res, next) => {
             res.status(400).send("Invalid email")
             return
         }
-            const user = updateUserPartial(id, {name, email})
+            const user = await updateUserPartial(id, {user_name, email, id_role})
             res.status(200).send(user)
         
     }catch(error){
@@ -96,10 +95,10 @@ userRouter.patch('/:id', (req, res, next) => {
     }
 })
 
-userRouter.delete('/:id', (req, res, next) => { 
+userRouter.delete('/:id', async (req, res, next) => { 
     try{ 
         const id = Number(req.params.id)
-        const user = deleteUser(id)
+        const user = await deleteUser(id)
         res.status(200).send(user)
      }
     catch(error){

@@ -5,16 +5,25 @@ export function validatePassword(password){
     return true
 }
 
-export function createUser(userDTO){
+export async function createUser(userDTO){
     return {
-        "name" : userDTO.name,
+        "userName" : userDTO.user_name,
         "email": userDTO.email,
-        "password": userDTO.password
+        "password": userDTO.password,
+        "idRole" : userDTO.idRole
+    }
+}
+
+export async function updateUser(userDTO){
+    return{
+        "userName" : userDTO.user_name,
+        "email" : userDTO.email,
+        "idRole" : userDTO.id_role
     }
 }
 
 export function getUserWithoutPassword(user){
     if(!user) return null
-    const { password, ...userWithoutPassword } = user
+    const {password, ...userWithoutPassword } = user
     return userWithoutPassword
 }

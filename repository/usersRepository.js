@@ -1,51 +1,34 @@
-let users = []
+import pool from "../boostrap.js"
+import { findAll, findById, save, updateById, deleteById } from "./BaseRepository.js"
 
-export function findAll(){
-    return users
+const usersTable = {
+    tableName : "users",
+    tablePK: "userId"
 }
 
-export function findUserById(id){
-    return users.find(user => user.id === id)
+export async function findAllUsers(){
+    return findAll(usersTable.tableName)
 }
 
-export function findByEmail(email){
-    if(users.find(user => user.email === email)){
-        return "User founded"
-    }
-    return undefined
+export async function findUserById(id){
+    return findById(id, usersTable.tableName, usersTable.tablePK)
 }
 
-export function existsByEmail(email){
-    if(users.some(user => user.email === email)){
-        return "User founded"
-    }
-
-    return null
+export async function findByEmail(email){
+    const [rows] = await pool.query(`
+        SELECT * from users
+        WHERE email = ?`, [email])
+    return rows[0]
 }
 
-export function createUserForDB(user){
-    const id = Date.now()
-    const createdAt = new Date().toISOString()
-
-    const newUser = {id, createdAt, ...user}
-    return newUser
+export async function saveUser(user){
+   return save(user, usersTable.tableName)
 }
 
-export function save(user){
-    users.push(user)
-    return true
+export async function updateUserById(id, newUserData){
+    updateById(id, newUserData, usersTable.tableName, usersTable.tablePK)
 }
 
-export function updateUserById(id, newUserData){
-    
-    const user = findUserById(id)
-
-    Object.assign(user, newUserData)
-
-    return user
-
-}
-
-export function deleteUserById(id){
-    users = users.filter(user => user.id !== id)
+export async function deleteUserById(id){
+   deleteById(id, usersTable.tableName, usersTable.tablePK)
 }

@@ -5,7 +5,7 @@ export function validateRequiredFiles(req, requiredFiles){
     }
 
     for(const file of requiredFiles){
-        if(!req.body[file]){
+        if(req.body[file] === undefined){
             return false
         }
     }
