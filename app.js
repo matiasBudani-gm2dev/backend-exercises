@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import userRouter from './routes/UsersRoutes.js';
 import roleRouter from './routes/RoleRoutes.js';
+import userRolesRouter from './routes/UsersRolesRoutes.js';
 import {errorHandling, notFoundHandler}  from './middleware/ErrorHandler.js';
 
 export function createApp(){
@@ -25,9 +26,11 @@ export function createApp(){
 
     app.use("/roles", roleRouter)
 
-    app.use(errorHandling)
+    app.use("/users-roles", userRolesRouter)
 
     app.use(notFoundHandler)
+    
+    app.use(errorHandling)
 
     return app
 }

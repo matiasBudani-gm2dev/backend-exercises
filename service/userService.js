@@ -13,6 +13,9 @@ export async function getAllUsersInfo(){
 }
 
 export async function getUserById(id){
+    if(Number.isNaN(id)){
+        throw createError(400, "Bad request", "The id has to be a number")
+    }
     const user = await findUserById(id)
     if(!user){
         throw createError(404, "Not found", "User not Found")
@@ -47,6 +50,10 @@ export async function createNewUser(userData){
 
 export async function updateUserComplete(id, userData){
 
+    if(Number.isNaN(id)){
+        throw createError(400, "Bad request", "The id has to be a number")
+    }
+
     const userFound = await findByEmail(userData.email)
 
     if(userFound){
@@ -70,6 +77,9 @@ export async function updateUserComplete(id, userData){
 
 export async function updateUserPartial(id, userData){
 
+    if(Number.isNaN(id)){
+        throw createError(400, "Bad request", "The id has to be a number")
+    }
 
     const userFound = await findByEmail(userData.email)
 
@@ -97,6 +107,11 @@ export async function updateUserPartial(id, userData){
 }
 
 export async function deleteUser(id){
+
+    if(Number.isNaN(id)){
+        throw createError(400, "Bad request", "The id has to be a number")
+    }
+
     const user = await getUserById(id)
     await deleteUserById(id)
     return user

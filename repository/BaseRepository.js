@@ -15,8 +15,17 @@ export async function findById(id, tableName, pk){
     return rows[0]
 }
 
-export async function save(user, tableName){
+export async function findWithJoin(leftTable, rightTable, leftFieldJoin, rightFieldJoin, searchParam, searchParamValue){
+    const [rows] = await pool.query(`
+        SELECT a.* FROM ${leftTable} a 
+        join ${rightTable} b on 
+        (a.${leftFieldJoin} = b.${rightFieldJoin}) where b.${searchParam} = ${searchParamValue};
+        `)
+    return rows
+}
 
+export async function save(user, tableName){
+    
     const fields = []
     const values = []
     const signoPregunta = []
@@ -30,6 +39,7 @@ export async function save(user, tableName){
     const [rows] = await pool.query(`
         INSERT INTO ${tableName} (${fields.join(",")})
         VALUES (${[signoPregunta.join(",")]})`, values)
+    
 
     return rows.insertId
 }

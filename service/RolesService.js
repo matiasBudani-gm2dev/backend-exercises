@@ -8,6 +8,11 @@ export async function getAllRolesInfo(){
 }
 
 export async function getRoleById(id){
+    
+    if(Number.isNaN(id)){
+        throw createError(400, "Bad request", "The id has to be a number")
+    }
+
     const role = await findRoleById(id)
     if(!role){
         throw createError(404, "Not found", "Role not found")
@@ -30,6 +35,11 @@ export async function createNewRole(roleData){
 }
 
 export async function updateRoleComplete(id, roleData){
+
+    if(Number.isNaN(id)){
+        throw createError(400, "Bad request", "The id has to be a number")
+    }
+
     if(!(await findRoleById(id))){
         throw createError(404, "Not found", "Role not found")
     }
@@ -48,6 +58,11 @@ export async function updateRoleComplete(id, roleData){
 }
 
 export async function updateRolePartial(id, roleData){
+
+    if(Number.isNaN(id)){
+        throw createError(400, "Bad request", "The id has to be a number")
+    }
+
     if(!(await findRoleById(id))){
         throw createError(404, "Not found", "Role not found")
     }
@@ -74,6 +89,11 @@ export async function updateRolePartial(id, roleData){
 }
 
 export async function deleteRole(id){
+
+    if(Number.isNaN(id)){
+        throw createError(400, "Bad request", "The id has to be a number")
+    }
+
     const role = getRoleById(id)
     deleteRoleById(id)
     return role
