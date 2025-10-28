@@ -1,7 +1,7 @@
 import express from 'express';
 const userRolesRouter = express.Router();
 
-import { getAllUsersWithSpecificRoleInfo, getAllRolesFromUser, createNewUserRole, getAllUsersRoles, updateNewUserRole, getUserRole } from '../service/UsersRolesService.js';
+import { getAllUsersWithSpecificRoleInfo, getAllRolesFromUser, createNewUserRole, getAllUsersRoles, updateNewUserRoles, getUserRole } from '../service/UsersRolesService.js';
 
 import { validateRequiredFiles } from '../utils/ValidateRequieredFiles.js';
 
@@ -56,7 +56,7 @@ userRolesRouter.get("/roles/:id", async(req, res, next)=>{
 
 userRolesRouter.post("/:id", async(req, res, next)=>{
     try{
-        const id = req.params.id
+        const user_id = Number(req.params.id)
         const {role_id} = req.body
         if(!validateRequiredFiles(req, requiredFields)){
             res.status(400).send("Missing data")  
@@ -70,18 +70,26 @@ userRolesRouter.post("/:id", async(req, res, next)=>{
     }
 })
 
-userRolesRouter.put("/", async (req, res, next)=>{
+userRolesRouter.put("/:id", async (req, res, next)=>{
     try{
-        const{role_id, user_id} = req.body
-        if(!validateRequiredFiles(req, requiredFields)){
+        const user_id = Number(req.params.id)
+        const {roles_ids} = req.body
+        if(!validateRequiredFiles(req, ["roles_ids"])){
             res.status(400).send("Missing data")
             return
         }
-        const userRole = await updateNewUserRole({role_id, user_id})
+        const userRole = await updateNewUserRoles({roles_ids, user_id})
         res.status(200).send(userRole)
     }catch(err){
         next(err)
     }
+})
+
+
+userRolesRouter.delete("/:id", async(req, res, next)=>{
+    const user_id = Number(req.params.id)
+    const user = await updateNewUserRoles({roles_ids: [], user_id})
+    res.status(200).send(user)
 })
 
 export default userRolesRouter

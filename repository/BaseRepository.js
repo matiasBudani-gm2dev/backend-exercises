@@ -21,6 +21,7 @@ export async function findWithJoin(leftTable, rightTable, leftFieldJoin, rightFi
         join ${rightTable} b on 
         (a.${leftFieldJoin} = b.${rightFieldJoin}) where b.${searchParam} = ${searchParamValue};
         `)
+
     return rows
 }
 
@@ -40,7 +41,6 @@ export async function save(user, tableName){
         INSERT INTO ${tableName} (${fields.join(",")})
         VALUES (${[signoPregunta.join(",")]})`, values)
     
-
     return rows.insertId
 }
 

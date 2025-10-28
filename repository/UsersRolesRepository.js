@@ -50,20 +50,21 @@ export async function saveUserRole(userRole){
     return save(userRole, usersRolesTableName)
 }
 
-export async function updateUserRole(newUserRoleData){
-    const userId = newUserRoleData.userId
-    const roleId = newUserRoleData.roleId
+export async function updateUserRoles(userId, userRoles){
 
-    const fields = []
-    const values = []
 
-    for (const [key, value] of Object.entries(newUserRoleData)) {
-        fields.push(`${key} = ?`)
-        values.push(value)
+    await pool.query(`
+        DELETE FROM ${usersRolesTableName}
+        WHERE userId = ?    
+    `, [userId])
+    
+    for(const role of userRoles){
+        await pool.query(`
+            INSERT INTO ${usersRolesTableName}
+            (${tableUserPK}, ${tableRolePK})
+            VALUES(?, ?)
+        `, [userId, role])
     }
-
-    await pool.execute(`UPDATE ${usersRolesTableName}
-        SET ${[fields]}
-        WHERE ${tableUserPK} = ?
-        AND ${tableRolePK} = ?`, [...values, userId, roleId])
+    
+    
 }
