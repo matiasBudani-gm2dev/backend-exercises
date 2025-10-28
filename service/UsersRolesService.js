@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import {createError} from "../utils/CreateError.js"
 
 import { createUserRoleModel, createPrimaryKeysUserRole, updateUserRolesModel } from "../models/UserRoleModel.js"
@@ -88,9 +90,21 @@ export async function createNewUserRole(userRoleData){
 
     const newUserRole = await createUserRoleModel(userRoleData)
 
+    const user = await getUserById(userId)
+    if(!user){
+        throw createError(404, "Not found", "The role was not found")
+    }
+    
+    const role = await getRoleById(roleId)
+    if(!role){
+        throw createError(404, "Not found", "The role was not found")
+    }
+
     if(!newUserRole){
         throw createError(500, "Internal server error", "User role not created")
     }
+
+    
 
     const usersRoles = await getAllUsersRoles()
     usersRoles.map((userRole)=>{
@@ -98,6 +112,7 @@ export async function createNewUserRole(userRoleData){
             throw createError(400, "Bad request", "User role already exists")
         }
     })
+
 
     await saveUserRole(newUserRole)
 
@@ -138,8 +153,6 @@ export async function updateNewUserRoles(userRoleData){
 
 
     const rolesIdsNums = rolesIds.map((roleId) => Number(roleId))
-
-
 
     const user = await getUserById(userId)
     if(!user){
