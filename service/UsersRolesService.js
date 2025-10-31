@@ -94,7 +94,7 @@ export async function createNewUserRole(userRoleData){
     if(!user){
         throw createError(404, "Not found", "The role was not found")
     }
-    
+
     const role = await getRoleById(roleId)
     if(!role){
         throw createError(404, "Not found", "The role was not found")

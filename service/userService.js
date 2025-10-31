@@ -4,11 +4,19 @@ import { createUser, validatePassword, updateUser, getUserWithoutPassword} from 
 import { findAllUsers ,findByEmail, findUserById, saveUser, updateUserById, deleteUserById } from "../repository/usersRepository.js";
 
 export async function getUsersWithoutPassword(users){
+    if(!Array.isArray(users)){
+        throw createError(404, "Not found", `${users} is not a list`)
+    }
     return users.map(({password, ...userWithoutPassword}) => userWithoutPassword)
 }
 
 export async function getAllUsersInfo(){
-    const users = await findAllUsers()
+    const usersResult = await findAllUsers()
+    const users = []
+    console.log(usersResult)
+    usersResult.forEach((userResult)=>{
+        users.push(userResult.dataValues)
+    })
     return getUsersWithoutPassword(users)
 }
 
@@ -16,18 +24,19 @@ export async function getUserById(id){
     if(Number.isNaN(id)){
         throw createError(400, "Bad request", "The id has to be a number")
     }
-    const user = await findUserById(id)
-    if(!user){
+    const userResult = await findUserById(id)
+    
+    if(!userResult){
         throw createError(404, "Not found", "User not Found")
     }
+
+    const user = userResult.dataValues
     return getUserWithoutPassword(user)
 
 }
 
 export async function createNewUser(userData){
-    if(!validatePassword(userData.password)){
-        throw createError(400, "Bad Request", "The password needs to have at least 6 characters")
-    }
+
 
     const userFound = await findByEmail(userData.email)
 
@@ -41,8 +50,9 @@ export async function createNewUser(userData){
         throw createError(500, 'Internal Server Error', "User not created")
     }
 
-    const userCreatedId = await saveUser(newUser) //saveUser() devuelve el ID del usuario creado
 
+    const userCreatedId = await saveUser(newUser) //saveUser() devuelve el ID del usuario creado
+        
     const safeUser = await getUserById(userCreatedId)
 
     return safeUser

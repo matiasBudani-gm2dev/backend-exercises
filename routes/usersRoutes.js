@@ -1,4 +1,6 @@
 import express from 'express';
+import bcrypt from "bcryptjs";
+
 const userRouter = express.Router();
 
 import { getAllUsersInfo, getUserById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/UserService.js';
@@ -7,6 +9,7 @@ import { getAllUsersInfo, getUserById, createNewUser, deleteUser, updateUserComp
 import { validateRequiredFiles } from '../utils/ValidateRequieredFiles.js';
 import {isValidEmail} from '../utils/IsValidEmail.js';
 import { validateAtLeastOneField } from '../utils/ValidateAtLeastOneField.js';
+import { validatePassword } from '../models/UserModel.js';
 
 
 const requiredFields = ["user_name", "email"]
@@ -44,7 +47,12 @@ userRouter.post('/', async (req, res, next) => {
             res.status(400).send("Invalid email")
             return
         }
-        const user = await createNewUser({user_name, email, password })
+        if(!validatePassword(password)){
+            res.status(400).send("The password needs to have at least 6 characters")
+            return
+        }
+        const passwordHash = await bcrypt.hash(password, 10)
+        const user = await createNewUser({user_name, email, passwordHash })
         res.status(201).send(user)
         
     }catch(error){

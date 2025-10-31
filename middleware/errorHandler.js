@@ -2,6 +2,8 @@ import {mapError} from "../utils/errorsMapper.js"
 
 export function errorHandling(err, req, res, next) {
 
+    console.log(err)
+
     const mappedError = mapError(err);
 
     res.status(mappedError.statusCode).json({

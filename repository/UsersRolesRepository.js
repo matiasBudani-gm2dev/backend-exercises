@@ -1,5 +1,11 @@
-import pool from "../boostrap.js"
-import { findAll, findWithJoin ,findById, save, updateById, deleteById } from "./BaseRepository.js"
+import { pool } from "../boostrap.js"
+import {findWithJoin, findByField, save, updateById, deleteById } from "./BaseRepository.js"
+
+import baseRepository from "./BaseRepository.js";
+import UserRole from "../models/UserRoleModel.js";
+import Users from "../models/UserModel.js";
+import Roles from "../models/RoleModel.js";
+
 
 const usersRolesTable = {
     usersTableName : "users",
@@ -20,26 +26,16 @@ const {
 
   
 export async function findAllUsersRoles(){
-    return findAll(usersRolesTableName)
+    return baseRepository.findAll(UserRole)
 }
 
 export async function findUserRole(userRoleIds){
-
-    const userId = userRoleIds.userId
-    const roleId = userRoleIds.roleId
-
-
-    const [rows] = await pool.query(`
-        SELECT * from ${usersRolesTableName} 
-        WHERE userId = ?
-        AND roleId = ?
-        `, [userId, roleId])
-    
-    return rows[0]
+    return baseRepository.findOne(UserRole, userRoleIds)
 }
 
 export async function findAllUsersWithSpecificRole(roleId){
-    return findWithJoin(usersTableName, usersRolesTableName, tableUserPK, tableUserPK, tableRolePK, roleId)
+    console.log(await Users.findAll())
+    return findWithJoin(Users, UserRole, tableRolePK, roleId)
 }
 
 export async function findAllRolesFromUser(userId){

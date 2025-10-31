@@ -1,5 +1,8 @@
-import pool from "../boostrap.js"
-import { findAll, findById, save, updateById, deleteById } from "./BaseRepository.js"
+import { pool} from "../boostrap.js"
+import { findByField, save, updateById, deleteById } from "./BaseRepository.js"
+
+import baseRepository from "./BaseRepository.js"
+import Users from "../models/UserModel.js"
 
 const usersTable = {
     tableName : "users",
@@ -7,11 +10,11 @@ const usersTable = {
 }
 
 export async function findAllUsers(){
-    return findAll(usersTable.tableName)
+    return baseRepository.findAll(Users)
 }
 
 export async function findUserById(id){
-    return findById(id, usersTable.tableName, usersTable.tablePK)
+    return baseRepository.findByPk(Users, id)
 }
 
 export async function findByEmail(email){

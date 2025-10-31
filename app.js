@@ -3,6 +3,7 @@ import cors from 'cors';
 import userRouter from './routes/UsersRoutes.js';
 import roleRouter from './routes/RoleRoutes.js';
 import userRolesRouter from './routes/UsersRolesRoutes.js';
+import authRouter from './routes/AuthRoutes.js';
 import {errorHandling, notFoundHandler}  from './middleware/ErrorHandler.js';
 
 export function createApp(){
@@ -27,6 +28,8 @@ export function createApp(){
     app.use("/roles", roleRouter)
 
     app.use("/users-roles", userRolesRouter)
+
+    app.use("/auth", authRouter)
 
     app.use(notFoundHandler)
     

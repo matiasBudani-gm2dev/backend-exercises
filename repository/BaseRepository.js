@@ -1,65 +1,107 @@
-import pool from "../boostrap.js"
+import { pool, sequelize} from "../boostrap.js"
 
-export async function findAll(tableName){
-    const [rows] = await pool.query(`
-        SELECT * from ${tableName}
-        `)
-    return rows
+const baseRepository = {
+    findAll: async (paramTable)=>await paramTable.findAll(),
+    findByPk: async (paramTable, pk)=>await paramTable.findByPk(pk),
+    findOne: async (paramTable, filters)=>await paramTable.findOne({
+        where : filters
+    })
 }
 
-export async function findById(id, tableName, pk){
-    const [rows] = await pool.query(`
-        SELECT * from ${tableName}
-        WHERE ${pk} = ?
-        `, [id])
-    return rows[0]
+
+
+
+
+export async function findByField(fieldName, tableName, field){
+    try{
+        const [rows] = await pool.query(`
+            SELECT * from ${tableName}
+            WHERE ${field} = ?
+        `, [fieldName])
+
+        return rows[0]
+
+    }catch(err){
+        console.error(err)
+    }
+    
 }
 
-export async function findWithJoin(leftTable, rightTable, leftFieldJoin, rightFieldJoin, searchParam, searchParamValue){
-    const [rows] = await pool.query(`
-        SELECT a.* FROM ${leftTable} a 
-        join ${rightTable} b on 
-        (a.${leftFieldJoin} = b.${rightFieldJoin}) where b.${searchParam} = ${searchParamValue};
-        `)
+export async function findWithJoin(LeftModel, RightModel, rightModelKey, rightModelKeyValue){
+    try {
+        const rows = await LeftModel.findAll({
+        include: [
+            {
+            model: RightModel,
+            required: true,  
+            where: {
+                [rightModelKey]: rightModelKeyValue
+            },
+            attributes: []
+            }
+        ],
+            attributes: { exclude: [] } 
+        });
 
-    return rows
-}
+        return rows
+
+    }catch(err){
+        console.error(err);
+        throw err;
+    }
+} 
 
 export async function save(user, tableName){
-    
-    const fields = []
-    const values = []
-    const signoPregunta = []
+    try{
+        const fields = []
+        const values = []
+        const signoPregunta = []
 
-    for(const [keys, value] of Object.entries(user)){
-        fields.push(keys)
-        values.push(value)
-        signoPregunta.push("?")
+        for(const [keys, value] of Object.entries(user)){
+            fields.push(keys)
+            values.push(value)
+            signoPregunta.push("?")
+        }
+
+
+        const [rows] = await pool.query(`
+            INSERT INTO ${tableName} (${fields.join(",")})
+            VALUES (${signoPregunta.join(",")})`, values
+        )
+
+        
+
+        return rows.insertId
+    }catch (err) {
+        console.error(err)
     }
-
-    const [rows] = await pool.query(`
-        INSERT INTO ${tableName} (${fields.join(",")})
-        VALUES (${[signoPregunta.join(",")]})`, values)
-    
-    return rows.insertId
 }
 
 export async function updateById(id, newUserData, tableName, pk){
-    
-    const fields = []
-    const values = []
+    try{
+        const fields = []
+        const values = []
 
-    for (const [key, value] of Object.entries(newUserData)) {
-        fields.push(`${key} = ?`)
-        values.push(value)
+        for (const [key, value] of Object.entries(newUserData)) {
+            fields.push(`${key} = ?`)
+            values.push(value)
+        }
+
+        await pool.execute(`UPDATE ${tableName} 
+            SET ${[fields]}
+            WHERE ${pk} = ?`, [...values, id])
+            
+    }catch(err){
+        console.error(err)
     }
-
-    await pool.execute(`UPDATE ${tableName} 
-        SET ${[fields]}
-        WHERE ${pk} = ?`, [...values, id])
-        
 }
 
 export async function deleteById(id, tableName, pk){
-   await pool.execute(`DELETE FROM ${tableName} WHERE ${pk} = ?`, [id])
+    try{
+        await pool.execute(`DELETE FROM ${tableName} WHERE ${pk} = ?`, [id])
+    }catch(err){
+        console.error(err)
+    }
 }
+
+export default baseRepository 

@@ -1,6 +1,6 @@
 import {createError} from "../utils/CreateError.js"
 
-import { findAllRoles, findRoleById, saveRole, updateRoleById, deleteRoleById } from "../repository/RolesRepository.js";
+import { findAllRoles, findRoleById, findRoleByName, saveRole, updateRoleById, deleteRoleById } from "../repository/RolesRepository.js";
 import { createOrUpdateRole } from "../models/RoleModel.js";
 
 export async function getAllRolesInfo(){
@@ -14,6 +14,14 @@ export async function getRoleById(id){
     }
 
     const role = await findRoleById(id)
+    if(!role){
+        throw createError(404, "Not found", "Role not found")
+    }
+    return role
+}
+
+export async function getRoleByName(name){
+    const role = await findRoleByName(name)
     if(!role){
         throw createError(404, "Not found", "Role not found")
     }

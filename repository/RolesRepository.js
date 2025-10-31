@@ -1,5 +1,8 @@
-import pool from "../boostrap.js"
-import { findAll, findById, save, updateById, deleteById } from "./BaseRepository.js"
+import { pool } from "../boostrap.js"
+import { findByField, save, updateById, deleteById } from "./BaseRepository.js"
+
+import Roles from "../models/RoleModel.js"
+import baseRepository from "./BaseRepository.js"
 
 const rolesTable = {
     tableName : "roles",
@@ -7,11 +10,15 @@ const rolesTable = {
 }
 
 export async function findAllRoles(){
-    return findAll(rolesTable.tableName)
+    return baseRepository.findAll(Roles)
 }
 
 export async function findRoleById(id){
-    return findById(id, rolesTable.tableName, rolesTable.tablePK)
+    return baseRepository.findByPk(Roles, id)
+}
+
+export async function findRoleByName(name){
+    return findByField(name, rolesTable.tableName, "roleName")
 }
 
 export async function saveRole(user){
