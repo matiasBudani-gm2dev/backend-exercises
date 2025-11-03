@@ -1,7 +1,11 @@
 import {createError} from "../utils/CreateError.js"
 
 import { createUser, validatePassword, updateUser, getUserWithoutPassword} from "../models/UserModel.js";
-import { findAllUsers ,findByEmail, findUserById, saveUser, updateUserById, deleteUserById } from "../repository/usersRepository.js";
+import { findAllUsers ,findByEmail, findUserById, saveUser, updateUserById, deleteUserById } from "../repository/usersRepository.js"
+import { isValidEmail } from "../utils/IsValidEmail.js";
+
+
+
 
 export async function getUsersWithoutPassword(users){
     if(!Array.isArray(users)){
@@ -31,18 +35,33 @@ export async function getUserById(id){
     }
 
     const user = userResult.dataValues
-    return getUserWithoutPassword(user)
 
+    return getUserWithoutPassword(user)
+}
+
+export async function getUserbyEmail(email){
+
+    const emailFilter = {"email": email}
+
+    const userResult = await findByEmail(emailFilter)
+
+
+    if(!userResult){
+        throw createError(404, "Not found", "User not Found")
+    }
+
+    const user = userResult.dataValues
+
+    return user
 }
 
 export async function createNewUser(userData){
 
+    // const userFound = await findByEmail(userData.email)
 
-    const userFound = await findByEmail(userData.email)
-
-    if(userFound){
-        throw createError(409, "Conflict Error", "El email ya existe" )
-    }
+    // if(userFound){
+    //     throw createError(409, "Conflict Error", "El email ya existe" )
+    // }
 
     const newUser = await createUser(userData)
 
@@ -51,9 +70,11 @@ export async function createNewUser(userData){
     }
 
 
-    const userCreatedId = await saveUser(newUser) //saveUser() devuelve el ID del usuario creado
+    const userCreated = await saveUser(newUser) //saveUser() devuelve el ID del usuario creado
         
-    const safeUser = await getUserById(userCreatedId)
+    const userId = userCreated.dataValues.userId
+
+    const safeUser = await getUserById(userId)
 
     return safeUser
 }

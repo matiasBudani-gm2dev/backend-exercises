@@ -5,6 +5,9 @@ const userRouter = express.Router();
 
 import { getAllUsersInfo, getUserById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/UserService.js';
 
+import { schemaValidation } from '../middleware/validation.js';
+import { createUserSchema } from '../schemas/userSchemas.js';
+
 //utils
 import { validateRequiredFiles } from '../utils/ValidateRequieredFiles.js';
 import {isValidEmail} from '../utils/IsValidEmail.js';
@@ -36,25 +39,12 @@ userRouter.get('/:id', async (req, res, next) => {
 })
 
 
-userRouter.post('/', async (req, res, next) => {
+userRouter.post('/', schemaValidation(createUserSchema), async (req, res, next) => {
     try{
         const {user_name, email, password} = req.body
-        if(!validateRequiredFiles(req, [...requiredFields, "password"])){
-            res.status(400).send("Missing data")  
-            return  
-        }
-        if(!isValidEmail(email)){
-            res.status(400).send("Invalid email")
-            return
-        }
-        if(!validatePassword(password)){
-            res.status(400).send("The password needs to have at least 6 characters")
-            return
-        }
         const passwordHash = await bcrypt.hash(password, 10)
         const user = await createNewUser({user_name, email, passwordHash })
         res.status(201).send(user)
-        
     }catch(error){
         next(error)
     }

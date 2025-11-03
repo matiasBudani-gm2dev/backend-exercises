@@ -64,6 +64,7 @@ export async function getAllUsersWithSpecificRoleInfo(roleId){
         throw createError(404, "Not found", "The role was not found")
     }
     const users = await findAllUsersWithSpecificRole(roleId)
+
     return getUsersWithoutPassword(users)
 }
 

@@ -1,5 +1,4 @@
-import { pool } from "../boostrap.js"
-import { findByField, save, updateById, deleteById } from "./BaseRepository.js"
+import { save, updateById, deleteById } from "./BaseRepository.js"
 
 import Roles from "../models/RoleModel.js"
 import baseRepository from "./BaseRepository.js"
@@ -18,15 +17,15 @@ export async function findRoleById(id){
 }
 
 export async function findRoleByName(name){
-    return findByField(name, rolesTable.tableName, "roleName")
+    return baseRepository.findOne(Roles, name)
 }
 
-export async function saveRole(user){
-   return save(user, rolesTable.tableName)
+export async function saveRole(role){
+   return baseRepository.create(Roles, role)
 }
 
 export async function updateRoleById(id, newUserData){
-    return updateById(id, newUserData, rolesTable.tableName, rolesTable.tablePK)
+    return updateById(id, newRoleData, rolesTable.tableName, rolesTable.tablePK)
 }
 
 export async function deleteRoleById(id){

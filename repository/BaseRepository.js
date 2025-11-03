@@ -5,50 +5,27 @@ const baseRepository = {
     findByPk: async (paramTable, pk)=>await paramTable.findByPk(pk),
     findOne: async (paramTable, filters)=>await paramTable.findOne({
         where : filters
-    })
-}
-
-
-
-
-
-export async function findByField(fieldName, tableName, field){
-    try{
-        const [rows] = await pool.query(`
-            SELECT * from ${tableName}
-            WHERE ${field} = ?
-        `, [fieldName])
-
-        return rows[0]
-
-    }catch(err){
-        console.error(err)
-    }
-    
-}
-
-export async function findWithJoin(LeftModel, RightModel, rightModelKey, rightModelKeyValue){
-    try {
-        const rows = await LeftModel.findAll({
-        include: [
-            {
-            model: RightModel,
-            required: true,  
-            where: {
-                [rightModelKey]: rightModelKeyValue
-            },
-            attributes: []
+    }),
+    findWithJoin: async (LeftModel, RightModel, rightModelKey, rightModelKeyValue)=>{
+        try {
+            const rows = await LeftModel.findAll({
+            include: {
+                model: RightModel,
+                where : {[rightModelKey] : rightModelKeyValue},
+                attributes: []
             }
-        ],
-            attributes: { exclude: [] } 
-        });
+        })
 
-        return rows
+        const plainRows = rows.map(r => r.get({ plain: true }));
 
-    }catch(err){
-        console.error(err);
-        throw err;
-    }
+        return plainRows
+
+        }catch(err){
+            console.error(err);
+            throw err;
+        }
+    },
+    create: async(paramTable, data)=> paramTable.create(data)
 } 
 
 export async function save(user, tableName){

@@ -1,10 +1,9 @@
 import { pool } from "../boostrap.js"
-import {findWithJoin, findByField, save, updateById, deleteById } from "./BaseRepository.js"
+import { fn, literal, Model } from "sequelize";
+import {save, updateById, deleteById } from "./BaseRepository.js"
 
 import baseRepository from "./BaseRepository.js";
-import UserRole from "../models/UserRoleModel.js";
-import Users from "../models/UserModel.js";
-import Roles from "../models/RoleModel.js";
+import {Users, Roles, UserRole} from "../models/index.js";
 
 
 const usersRolesTable = {
@@ -34,12 +33,11 @@ export async function findUserRole(userRoleIds){
 }
 
 export async function findAllUsersWithSpecificRole(roleId){
-    console.log(await Users.findAll())
-    return findWithJoin(Users, UserRole, tableRolePK, roleId)
+    return baseRepository.findWithJoin(Users, UserRole, tableRolePK, roleId)
 }
 
 export async function findAllRolesFromUser(userId){
-    return findWithJoin(rolesTableName, usersRolesTableName, tableRolePK, tableRolePK, tableUserPK, userId)
+    return baseRepository.findWithJoin(Roles, UserRole, tableUserPK, userId)
 }
 
 export async function saveUserRole(userRole){
@@ -47,7 +45,6 @@ export async function saveUserRole(userRole){
 }
 
 export async function updateUserRoles(userId, userRoles){
-
 
     await pool.query(`
         DELETE FROM ${usersRolesTableName}
@@ -60,7 +57,5 @@ export async function updateUserRoles(userId, userRoles){
             (${tableUserPK}, ${tableRolePK})
             VALUES(?, ?)
         `, [userId, role])
-    }
-    
-    
+    }   
 }

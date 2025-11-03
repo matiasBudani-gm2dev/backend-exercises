@@ -21,7 +21,10 @@ export async function getRoleById(id){
 }
 
 export async function getRoleByName(name){
-    const role = await findRoleByName(name)
+    const nameFilter = {
+        roleName : name
+    }
+    const role = await findRoleByName(nameFilter)
     if(!role){
         throw createError(404, "Not found", "Role not found")
     }
@@ -35,7 +38,8 @@ export async function createNewRole(roleData){
         throw createError(500, "Internal server error", "Role was not created")
     }
 
-    const roleCreatedId = await saveRole(newRole)
+    const roleCreatedResult = await saveRole(newRole)
+
 
     const createdRole = await getRoleById(roleCreatedId)
 
