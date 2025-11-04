@@ -10,24 +10,32 @@ import { validatePassword } from '../models/UserModel.js';
 import { createNewUserRole, getAllRolesFromUser } from '../service/UsersRolesService.js'; 
 import { isValidEmail } from '../utils/IsValidEmail.js';
 import { authorizeRoles, authenticateToken } from '../middleware/authentication.js';
+import { createUserSchema, getUserSchema } from '../schemas/UserSchemas.js';
+import { loginSchema } from '../schemas/authSchemas.js';
+import { schemaReqValidation } from '../middleware/validation.js';
+
 
 const authRouter = express.Router();
 
 const requiredFields = ["user_name", "password"]
 
-authRouter.post("/register", async(req, res, next)=>{
+authRouter.post("/register", schemaReqValidation(createUserSchema), async(req, res, next)=>{
     try{
         const{ user_name, email, password} = req.body
         if(!validateRequiredFiles(req, requiredFields)){
             res.status(400).send("Missing data")
+            return
         }
         if(!validatePassword(password)){
             res.status(400).send("The password needs to have at least 6 characters")
+            return
         }
         const passwordHash = await bcrypt.hash(password, 10)
-        const newUser = await createNewUser({user_name, email, passwordHash })
+        
         const roleUser = await getRoleByName("user")
 
+        const newUser = await createNewUser({user_name, email, passwordHash })
+        
         const user_id = newUser.userId
         const role_id = roleUser.roleId
 

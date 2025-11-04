@@ -1,9 +1,6 @@
 
 import { DataTypes } from "sequelize";
 import {sequelize} from "../boostrap.js";
-import Joi from "joi";
-
-import UserRole from "./UserRoleModel.js";
 
 const Users = sequelize.define("Users", {
   userId: {

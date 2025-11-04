@@ -57,11 +57,13 @@ export async function getUserbyEmail(email){
 
 export async function createNewUser(userData){
 
-    // const userFound = await findByEmail(userData.email)
+    const emailFilter = {"email": userData.email}
 
-    // if(userFound){
-    //     throw createError(409, "Conflict Error", "El email ya existe" )
-    // }
+    const userFound = await findByEmail(emailFilter)
+
+    if(userFound){
+        throw createError(409, "Conflict Error", "El email ya existe" )
+    }
 
     const newUser = await createUser(userData)
 
@@ -70,15 +72,16 @@ export async function createNewUser(userData){
     }
 
 
-    const userCreated = await saveUser(newUser) //saveUser() devuelve el ID del usuario creado
-        
+    const userCreated = await saveUser(newUser)
+
     const userId = userCreated.dataValues.userId
 
     const safeUser = await getUserById(userId)
 
-    return safeUser
-}
 
+    return safeUser
+
+}
 export async function updateUserComplete(id, userData){
 
     if(Number.isNaN(id)){

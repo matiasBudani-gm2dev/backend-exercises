@@ -20,7 +20,7 @@ const getUserSchema = Joi.object({
     userId: Joi.number().integer().min(1).required(),
     createdAt : Joi.date().max("now").required(),
     email: Joi.string().email().required(),
-    user_name: Joi.string().min(3).max(45).required()
+    userName: Joi.string().min(3).max(45).required()
 })
 
 export {createUserSchema, updateCompleteUserSchema, updatePartialUserSchema, getUserSchema}

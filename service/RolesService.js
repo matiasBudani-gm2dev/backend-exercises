@@ -15,7 +15,7 @@ export async function getRoleById(id){
 
     const role = await findRoleById(id)
     if(!role){
-        throw createError(404, "Not found", "Role not found")
+        throw createError(404, "Role not found")
     }
     return role
 }

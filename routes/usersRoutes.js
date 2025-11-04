@@ -1,12 +1,13 @@
 import express from 'express';
 import bcrypt from "bcryptjs";
+import Joi from 'joi';
 
 const userRouter = express.Router();
 
 import { getAllUsersInfo, getUserById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/UserService.js';
 
-import { schemaValidation } from '../middleware/validation.js';
-import { createUserSchema } from '../schemas/userSchemas.js';
+import { schemaReqValidation } from '../middleware/validation.js';
+import { getUserSchema, createUserSchema, updateCompleteUserSchema, updatePartialUserSchema } from '../schemas/userSchemas.js';
 
 //utils
 import { validateRequiredFiles } from '../utils/ValidateRequieredFiles.js';
@@ -18,7 +19,7 @@ import { validatePassword } from '../models/UserModel.js';
 const requiredFields = ["user_name", "email"]
 
 
-userRouter.get('/', async (req, res, next ) => {
+userRouter.get('/' ,async (req, res, next ) => {
     try{
         const users = await getAllUsersInfo()
         res.status(200).send(users)
@@ -39,19 +40,35 @@ userRouter.get('/:id', async (req, res, next) => {
 })
 
 
-userRouter.post('/', schemaValidation(createUserSchema), async (req, res, next) => {
+userRouter.post('/',
+    schemaReqValidation(createUserSchema),
+    async (req, res, next) => {
     try{
         const {user_name, email, password} = req.body
         const passwordHash = await bcrypt.hash(password, 10)
         const user = await createNewUser({user_name, email, passwordHash })
-        res.status(201).send(user)
+
+        console.log(user)
+
+        const {error} = getUserSchema.validate(user, {abortEarly: false, stripUnknown: true})
+        if(error){
+            let errorMessages = ''
+            error.details.forEach(detailErr => {
+                errorMessages += `${detailErr.message}\n`
+            })
+            res.status(500).send(errorMessages)
+            return
+        }
+        else{
+            res.status(201).send(user)
+        }
     }catch(error){
         next(error)
     }
 })
 
 
-userRouter.put('/:id', async (req, res, next) => {
+userRouter.put('/:id', schemaReqValidation(updateCompleteUserSchema), async (req, res, next) => {
     try{
         const id = Number(req.params.id)
         const {user_name, email } = req.body;
@@ -73,7 +90,7 @@ userRouter.put('/:id', async (req, res, next) => {
 })
 
 
-userRouter.patch('/:id', async (req, res, next) => {
+userRouter.patch('/:id', schemaReqValidation(updatePartialUserSchema), async (req, res, next) => {
     try{   
         const id = Number(req.params.id)
         const {user_name, email } = req.body;

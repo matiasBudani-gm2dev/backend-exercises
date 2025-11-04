@@ -41,7 +41,7 @@ export async function findAllRolesFromUser(userId){
 }
 
 export async function saveUserRole(userRole){
-    return save(userRole, usersRolesTableName)
+    return baseRepository.create(UserRole, userRole)
 }
 
 export async function updateUserRoles(userId, userRoles){
