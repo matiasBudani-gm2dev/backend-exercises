@@ -22,14 +22,6 @@ const requiredFields = ["user_name", "password"]
 authRouter.post("/register", schemaReqValidation(createUserSchema), async(req, res, next)=>{
     try{
         const{ user_name, email, password} = req.body
-        if(!validateRequiredFiles(req, requiredFields)){
-            res.status(400).send("Missing data")
-            return
-        }
-        if(!validatePassword(password)){
-            res.status(400).send("The password needs to have at least 6 characters")
-            return
-        }
         const passwordHash = await bcrypt.hash(password, 10)
         
         const roleUser = await getRoleByName("user")
@@ -47,16 +39,8 @@ authRouter.post("/register", schemaReqValidation(createUserSchema), async(req, r
     }
 })
 
-authRouter.post("/login", async(req, res, next)=>{
+authRouter.post("/login", schemaReqValidation(loginSchema) ,async(req, res, next)=>{
     const {email, password} = req.body
-    if(!validateRequiredFiles(req, ["email", "password"])){
-        res.status(400).send("Missing data")  
-        return  
-    }
-    if(!isValidEmail(email)){
-        res.status(400).send("Invalid email")
-        return
-    }
     const user = await getUserbyEmail(email)
     
     const passwordOk = await bcrypt.compare(password, user.password)

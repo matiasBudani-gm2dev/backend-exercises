@@ -1,7 +1,3 @@
-import { pool } from "../boostrap.js"
-import { fn, literal, Model } from "sequelize";
-import {save, updateById, deleteById } from "./BaseRepository.js"
-
 import baseRepository from "./BaseRepository.js";
 import {Users, Roles, UserRole} from "../models/index.js";
 
@@ -46,16 +42,9 @@ export async function saveUserRole(userRole){
 
 export async function updateUserRoles(userId, userRoles){
 
-    await pool.query(`
-        DELETE FROM ${usersRolesTableName}
-        WHERE userId = ?    
-    `, [userId])
-    
+    await baseRepository.destroy(UserRole, tableUserPK, userId)
+
     for(const role of userRoles){
-        await pool.query(`
-            INSERT INTO ${usersRolesTableName}
-            (${tableUserPK}, ${tableRolePK})
-            VALUES(?, ?)
-        `, [userId, role])
-    }   
+        await baseRepository.create(UserRole, role)
+    }
 }

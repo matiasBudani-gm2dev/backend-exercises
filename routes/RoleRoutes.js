@@ -5,12 +5,23 @@ import { createNewRole, getAllRolesInfo, getRoleById, updateRoleComplete, update
 import { validateRequiredFiles } from '../utils/ValidateRequieredFiles.js';
 import { validateAtLeastOneField } from '../utils/ValidateAtLeastOneField.js';
 
+import { schemaReqValidation, schemaResValidation } from '../middleware/validation.js';
+import { getRoleSchema, createRoleSchema, updateCompleteRoleSchema, updatePartialRoleSchema } from '../schemas/rolesSchemas.js';
+
+
 const requiredFields = ["role_name"]
 
 
 roleRouter.get("/", async (req, res, next) =>{
     try{
         const roles = await getAllRolesInfo()
+        roles.map(role=>{
+            const isError = schemaResValidation(getRoleSchema, role)
+            if(isError){
+                res.status(400).send(isError)
+                return
+            }
+        })
         res.status(200).send(roles)
     }catch(err){
         next(err)
@@ -21,20 +32,26 @@ roleRouter.get("/:id", async (req, res, next)=>{
     try{
         const id = Number(req.params.id)
         const role = await getRoleById(id)
+        const isError = schemaResValidation(getRoleSchema, role)
+        if(isError){
+            res.status(400).send(isError)
+            return
+        }
         res.status(200).send(role)
     }catch(err){
         next(err)
     }
 })
 
-roleRouter.post("/", async (req, res, next) =>{
+roleRouter.post("/", schemaReqValidation(createRoleSchema) ,async (req, res, next) =>{
     try{
         const {role_name} = req.body
-        if(!validateRequiredFiles(req, requiredFields)){
-            res.status(400).send("Missing data")
+        const role = await createNewRole({role_name})
+        const isError = schemaResValidation(getRoleSchema, role)
+        if(isError){
+            res.status(400).send(isError)
             return
         }
-        const role = await createNewRole({role_name})
         res.status(201).send(role)
     }catch(err){
         next(err)
@@ -42,15 +59,19 @@ roleRouter.post("/", async (req, res, next) =>{
 })
 
 
-roleRouter.put("/:id", async(req, res, next)=>{
+roleRouter.put("/:id", schemaReqValidation(updateCompleteRoleSchema),async(req, res, next)=>{
     try{
         const id = Number(req.params.id)
         const {role_name} = req.body
-        if(!validateRequiredFiles(req, requiredFields)){
-            res.status(400).send("Missing data")
+
+        const role = await updateRoleComplete(id, {role_name})
+
+        const isError = schemaResValidation(getRoleSchema, role)
+        if(isError){
+            res.status(400).send(isError)
             return
         }
-        const role = await updateRoleComplete(id, {role_name})
+
         res.status(200).send(role)
     }catch(err){
         next(err)
@@ -58,15 +79,19 @@ roleRouter.put("/:id", async(req, res, next)=>{
     
 })
 
-roleRouter.patch("/:id", async(req, res, next)=>{
+roleRouter.patch("/:id", schemaReqValidation(updatePartialRoleSchema) ,async(req, res, next)=>{
     try{
         const id = Number(req.params.id)
         const {role_name} = req.body
-        if(!validateAtLeastOneField(req, requiredFields)){
-            res.status(400).send("Missing data")
+
+        const role = await updateRolePartial(id, {role_name})
+
+        const isError = schemaResValidation(getRoleSchema, role)
+        if(isError){
+            res.status(400).send(isError)
             return
         }
-        const role = await updateRolePartial(id, {role_name})
+
         res.status(200).send(role)
     }catch(err){
         next(err)
@@ -76,8 +101,16 @@ roleRouter.patch("/:id", async(req, res, next)=>{
 roleRouter.delete("/:id", async(req, res, next)=>{
     try{
         const id = Number(req.params.id)
-        const rol = await deleteRole(id)
-        res.status(200).send(rol)
+
+        const role = await deleteRole(id)
+
+        const isError = schemaResValidation(getRoleSchema, role)
+        if(isError){
+            res.status(400).send(isError)
+            return
+        }
+        
+        res.status(200).send(role)
     }catch(err){
         next(err)
     }

@@ -17,7 +17,6 @@ export async function getUsersWithoutPassword(users){
 export async function getAllUsersInfo(){
     const usersResult = await findAllUsers()
     const users = []
-    console.log(usersResult)
     usersResult.forEach((userResult)=>{
         users.push(userResult.dataValues)
     })
@@ -88,7 +87,9 @@ export async function updateUserComplete(id, userData){
         throw createError(400, "Bad request", "The id has to be a number")
     }
 
-    const userFound = await findByEmail(userData.email)
+    const emailFilter = {"email": userData.email} 
+
+    const userFound = await findByEmail(emailFilter)
 
     if(userFound){
         throw createError(409, "Conflict Error", "Existing email" )
@@ -115,11 +116,12 @@ export async function updateUserPartial(id, userData){
         throw createError(400, "Bad request", "The id has to be a number")
     }
 
-    const userFound = await findByEmail(userData.email)
-
-    if(userFound){
-        throw createError(409, "Conflict Error", "Existing email" )
+    if(userData.email){
+        const emailFilter = {"email": userData.email} 
+        const userFound = await findByEmail(emailFilter)
+        if(userFound) throw createError(409, "Conflict Error", "Existing email" )
     }
+
     if(!(await findUserById(id))){
         throw createError(404, "Not found", "User not found")
     }

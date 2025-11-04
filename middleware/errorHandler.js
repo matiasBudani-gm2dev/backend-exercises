@@ -1,8 +1,9 @@
 import {mapError} from "../utils/errorsMapper.js"
+import logger from "../winstonLogs.js";
 
 export function errorHandling(err, req, res, next) {
 
-    console.log(err)
+    logger.error(err)
 
     const mappedError = mapError(err);
 
@@ -16,6 +17,9 @@ export function errorHandling(err, req, res, next) {
 }
 
 export function notFoundHandler (req, res, next) {
+
+    logger.error(err)
+
     res.status(404).json({
         error: {
             type: "Not Found",

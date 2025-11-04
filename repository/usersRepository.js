@@ -1,5 +1,3 @@
-import {save, updateById, deleteById } from "./BaseRepository.js"
-
 import baseRepository from "./BaseRepository.js"
 import Users from "../models/UserModel.js"
 
@@ -25,9 +23,10 @@ export async function saveUser(user){
 }
 
 export async function updateUserById(id, newUserData){
-    updateById(id, newUserData, usersTable.tableName, usersTable.tablePK)
+    await baseRepository.update(Users, newUserData, usersTable.tablePK, id)
 }
 
 export async function deleteUserById(id){
-   deleteById(id, usersTable.tableName, usersTable.tablePK)
+    await baseRepository.destroy(Users, usersTable.tablePK, id)
+    //deleteById(id, usersTable.tableName, usersTable.tablePK)
 }

@@ -1,4 +1,4 @@
-import { pool, sequelize} from "../boostrap.js"
+import logger from "../winstonLogs";
 
 const baseRepository = {
     findAll: async (paramTable)=>await paramTable.findAll(),
@@ -21,64 +21,32 @@ const baseRepository = {
         return plainRows
 
         }catch(err){
-            console.error(err);
+            logger.error(err);
             throw err;
         }
     },
-    create: async(paramTable, data)=> paramTable.create(data)
+    create: async(paramTable, data)=> paramTable.create(data),
+    update : async (paramTable, newData, idKey, idValue) =>{
+        try{
+            await paramTable.update(
+                newData,
+                {
+                    where: 
+                    {
+                        [idKey]: idValue
+                    },
+                },
+            )
+        }catch(err){
+            logger.error(err)
+        }
+    },
+    destroy: async (paramTable, idKey, idValue)=>{
+        await paramTable.destroy({
+            where : {
+                [idKey] :idValue
+            }
+        })
+    }
 } 
-
-export async function save(user, tableName){
-    try{
-        const fields = []
-        const values = []
-        const signoPregunta = []
-
-        for(const [keys, value] of Object.entries(user)){
-            fields.push(keys)
-            values.push(value)
-            signoPregunta.push("?")
-        }
-
-
-        const [rows] = await pool.query(`
-            INSERT INTO ${tableName} (${fields.join(",")})
-            VALUES (${signoPregunta.join(",")})`, values
-        )
-
-        
-
-        return rows.insertId
-    }catch (err) {
-        console.error(err)
-    }
-}
-
-export async function updateById(id, newUserData, tableName, pk){
-    try{
-        const fields = []
-        const values = []
-
-        for (const [key, value] of Object.entries(newUserData)) {
-            fields.push(`${key} = ?`)
-            values.push(value)
-        }
-
-        await pool.execute(`UPDATE ${tableName} 
-            SET ${[fields]}
-            WHERE ${pk} = ?`, [...values, id])
-            
-    }catch(err){
-        console.error(err)
-    }
-}
-
-export async function deleteById(id, tableName, pk){
-    try{
-        await pool.execute(`DELETE FROM ${tableName} WHERE ${pk} = ?`, [id])
-    }catch(err){
-        console.error(err)
-    }
-}
-
 export default baseRepository 

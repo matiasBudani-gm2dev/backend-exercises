@@ -1,5 +1,3 @@
-import { save, updateById, deleteById } from "./BaseRepository.js"
-
 import Roles from "../models/RoleModel.js"
 import baseRepository from "./BaseRepository.js"
 
@@ -24,10 +22,10 @@ export async function saveRole(role){
    return baseRepository.create(Roles, role)
 }
 
-export async function updateRoleById(id, newUserData){
-    return updateById(id, newRoleData, rolesTable.tableName, rolesTable.tablePK)
+export async function updateRoleById(id, newRoleData){
+    await baseRepository.update(Roles, newRoleData, rolesTable.tablePK, id)
 }
 
 export async function deleteRoleById(id){
-    deleteById(id, rolesTable.tableName, rolesTable.tablePK)
+    await baseRepository.destroy(Roles, rolesTable.tablePK, id)
 }

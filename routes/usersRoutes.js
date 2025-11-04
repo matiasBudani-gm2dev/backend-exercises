@@ -6,22 +6,19 @@ const userRouter = express.Router();
 
 import { getAllUsersInfo, getUserById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/UserService.js';
 
-import { schemaReqValidation } from '../middleware/validation.js';
+import { schemaReqValidation, schemaResValidation } from '../middleware/validation.js';
 import { getUserSchema, createUserSchema, updateCompleteUserSchema, updatePartialUserSchema } from '../schemas/userSchemas.js';
-
-//utils
-import { validateRequiredFiles } from '../utils/ValidateRequieredFiles.js';
-import {isValidEmail} from '../utils/IsValidEmail.js';
-import { validateAtLeastOneField } from '../utils/ValidateAtLeastOneField.js';
-import { validatePassword } from '../models/UserModel.js';
-
-
-const requiredFields = ["user_name", "email"]
-
 
 userRouter.get('/' ,async (req, res, next ) => {
     try{
         const users = await getAllUsersInfo()
+        users.map(user=>{
+            const isError = schemaResValidation(getUserSchema, user)
+            if(isError){
+                res.status(500).send(isError)
+                return
+            }
+        })
         res.status(200).send(users)
     }
     catch(error){
@@ -33,57 +30,50 @@ userRouter.get('/:id', async (req, res, next) => {
     try{
         const id = (Number(req.params.id))
         const user = await getUserById(id)
+        const isError = schemaResValidation(getUserSchema, user)
+        if(isError){
+            res.status(400).send(isError)
+            return
+        }
         res.status(200).send(user)
     }catch(error){
         next(error)
     }
 })
 
-
 userRouter.post('/',
     schemaReqValidation(createUserSchema),
-    async (req, res, next) => {
-    try{
-        const {user_name, email, password} = req.body
-        const passwordHash = await bcrypt.hash(password, 10)
-        const user = await createNewUser({user_name, email, passwordHash })
+        async (req, res, next) => {     
+        try{
+            const {user_name, email, password} = req.body
+            const passwordHash = await bcrypt.hash(password, 10)
+            const user = await createNewUser({user_name, email, passwordHash })
 
-        console.log(user)
-
-        const {error} = getUserSchema.validate(user, {abortEarly: false, stripUnknown: true})
-        if(error){
-            let errorMessages = ''
-            error.details.forEach(detailErr => {
-                errorMessages += `${detailErr.message}\n`
-            })
-            res.status(500).send(errorMessages)
-            return
-        }
-        else{
+            const isError = schemaResValidation(getUserSchema, user)
+            if(isError){
+                res.status(400).send(isError)
+                return
+            }
             res.status(201).send(user)
+        }catch(error){
+            next(error)
         }
-    }catch(error){
-        next(error)
     }
-})
+)
 
 
 userRouter.put('/:id', schemaReqValidation(updateCompleteUserSchema), async (req, res, next) => {
     try{
         const id = Number(req.params.id)
         const {user_name, email } = req.body;
-        if(!validateRequiredFiles(req, requiredFields)){
-            res.status(400).send("Missing data")    
-            return
-        }
-        if(!isValidEmail(email)){
-            res.status(400).send("Invalid email")
-            return
-        }
 
         const user = await updateUserComplete(id, {user_name, email })
-        res.status(200).send(user)
-        
+        const isError = schemaResValidation(getUserSchema, user)
+        if(isError){
+            res.status(400).send(isError)
+            return
+        }    
+        res.status(200).send(user)    
     }catch(error){
         next(error)
     }
@@ -94,17 +84,15 @@ userRouter.patch('/:id', schemaReqValidation(updatePartialUserSchema), async (re
     try{   
         const id = Number(req.params.id)
         const {user_name, email } = req.body;
-        if(!validateAtLeastOneField(req, requiredFields)){
-            res.status(400).send("Missing data")    
+
+        const user = await updateUserPartial(id, {user_name, email})
+
+        const isError = schemaResValidation(getUserSchema, user)
+        if(isError){
+            res.status(400).send(isError)
             return
-        }
-        if(email && !isValidEmail(email)){
-            res.status(400).send("Invalid email")
-            return
-        }
-            const user = await updateUserPartial(id, {user_name, email})
-            res.status(200).send(user)
-        
+        }     
+        res.status(200).send(user)   
     }catch(error){
         next(error)
     }
@@ -114,8 +102,13 @@ userRouter.delete('/:id', async (req, res, next) => {
     try{ 
         const id = Number(req.params.id)
         const user = await deleteUser(id)
+        const isError = schemaResValidation(getUserSchema, user)
+        if(isError){
+            res.status(400).send(isError)
+            return
+        }
         res.status(200).send(user)
-     }
+    }
     catch(error){
         next(error)
     }

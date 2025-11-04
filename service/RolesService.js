@@ -62,7 +62,7 @@ export async function updateRoleComplete(id, roleData){
         throw createError(500, "Internal server error", "User was not updated")
     }
 
-    updateRoleById(id, newRole)
+    await updateRoleById(id, newRole)
 
     const updatedRole = await getRoleById(id)
 
@@ -86,14 +86,12 @@ export async function updateRolePartial(id, roleData){
     }
 
     for (const [key, value] of Object.entries(roleData)) {
-        console.log(key)
-        console.log(value)
         if(value === undefined){
             delete userData[key]
         }
     }
 
-    updateRoleById(id, newRole)
+    await updateRoleById(id, newRole)
 
     const updatedRole = await getRoleById(id)
 

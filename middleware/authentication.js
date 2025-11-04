@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config"
+import logger from "../winstonLogs";
 
 export async function authenticateToken(req, res, next){
     const authHeader = req.headers.authorization
@@ -9,7 +10,7 @@ export async function authenticateToken(req, res, next){
     
     jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
         if(err){ 
-            console.log(err)
+            logger.error(err)
             return res.sendStatus(401)
         }
         req.user = payload
