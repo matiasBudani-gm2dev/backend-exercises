@@ -4,7 +4,7 @@ import Joi from 'joi';
 
 const userRouter = express.Router();
 
-import { getAllUsersInfo, getUserById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/UserService.js';
+import { getAllUsersInfo, getUserById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/userService.js';
 
 import { schemaReqValidation, schemaResValidation } from '../middleware/validation.js';
 import { getUserSchema, createUserSchema, updateCompleteUserSchema, updatePartialUserSchema } from '../schemas/userSchemas.js';
