@@ -1,4 +1,4 @@
-import logger from "../winstonLogs";
+import logger from "../winstonLogs.js";
 
 const baseRepository = {
     findAll: async (paramTable)=>await paramTable.findAll(),

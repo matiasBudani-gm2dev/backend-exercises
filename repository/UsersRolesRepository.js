@@ -44,7 +44,8 @@ export async function updateUserRoles(userId, userRoles){
 
     await baseRepository.destroy(UserRole, tableUserPK, userId)
 
-    for(const role of userRoles){
-        await baseRepository.create(UserRole, role)
+
+    for(const roleId of userRoles){
+        await baseRepository.create(UserRole, {userId, roleId})
     }
 }

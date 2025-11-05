@@ -40,6 +40,7 @@ export async function createNewRole(roleData){
 
     const roleCreatedResult = await saveRole(newRole)
 
+    const roleCreatedId = roleCreatedResult.dataValues.roleId
 
     const createdRole = await getRoleById(roleCreatedId)
 

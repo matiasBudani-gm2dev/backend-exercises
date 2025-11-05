@@ -1,4 +1,4 @@
-import logger from "../winstonLogs"
+import logger from "../winstonLogs.js"
 
 export function schemaReqValidation(schema){
     return (req, res, next)=>{

@@ -76,8 +76,11 @@ export async function getAllRolesFromUser(userId){
     if(!user){
         throw createError(404, "Not found", "The role was not found")
     }
-    const users = await findAllRolesFromUser(userId)
-    return getUsersWithoutPassword(users)
+
+    const userWithRoles = await getUserWithRoles(userId)
+
+
+    return userWithRoles
 }
 
 export async function createNewUserRole(userRoleData){
@@ -159,8 +162,6 @@ export async function updateNewUserRoles(userRoleData){
     if(!user){
         throw createError(404, "Not found", "The user was not found")
     }
-
-
 
     await updateUserRoles(userId, rolesIdsNums)
 

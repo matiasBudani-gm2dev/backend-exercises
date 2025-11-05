@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config"
-import logger from "../winstonLogs";
+import logger from "../winstonLogs.js";
 
 export async function authenticateToken(req, res, next){
     const authHeader = req.headers.authorization
