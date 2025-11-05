@@ -1,4 +1,8 @@
 import {createApp} from './app.js';
 
-createApp().listen(3000)
+const PORT = process.env.PORT || 3000;
+
+createApp().listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
+});
 console.log(`🎯 Arquitectura: Routes → Service → Repository + Model → MySQL DB`)
