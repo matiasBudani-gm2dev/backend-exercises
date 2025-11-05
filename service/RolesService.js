@@ -8,14 +8,11 @@ export async function getAllRolesInfo(){
 }
 
 export async function getRoleById(id){
-    
-    if(Number.isNaN(id)){
-        throw createError(400, "Bad request", "The id has to be a number")
-    }
-
     const role = await findRoleById(id)
+    console.log(role)
     if(!role){
-        throw createError(404, "Role not found")
+        console.log("entre aca entonces")
+        throw createError(404, "Role not found", "Role wasnt found")
     }
     return role
 }

@@ -43,7 +43,6 @@ authRouter.post("/login", schemaReqValidation(loginSchema) ,async(req, res, next
     const {email, password} = req.body
     const user = await getUserbyEmail(email)
     
-
     const passwordOk = await bcrypt.compare(password, user.password)
 
     if (!passwordOk) return res.status(400).send("Credenciales invalidas")
