@@ -3,12 +3,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config"
 
-import { validateRequiredFiles } from '../utils/ValidateRequieredFiles.js';
 import { createNewUser, getUserbyEmail } from '../service/UserService.js';
 import { getRoleByName } from '../service/RolesService.js';
-import { validatePassword } from '../models/UserModel.js';
 import { createNewUserRole, getAllRolesFromUser } from '../service/UsersRolesService.js'; 
-import { isValidEmail } from '../utils/IsValidEmail.js';
 import { authorizeRoles, authenticateToken } from '../middleware/authentication.js';
 import { createUserSchema, getUserSchema } from '../schemas/UserSchemas.js';
 import { loginSchema } from '../schemas/authSchemas.js';
