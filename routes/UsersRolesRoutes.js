@@ -4,7 +4,7 @@ const userRolesRouter = express.Router();
 import { getAllUsersWithSpecificRoleInfo, getAllRolesFromUser, createNewUserRole, getAllUsersRoles, updateNewUserRoles, getUserRole } from '../service/UsersRolesService.js';
 
 import { getUserRolesSchema, getUserWithRolesSchema, roleIdSchema, rolesIdArraySchema, deleteUserWithEmptyRolesSchema } from '../schemas/userRolesSchemas.js';
-import { getUserSchema } from '../schemas/UserSchemas.js';
+import { getUserSchema } from '../schemas/userSchemas.js';
 
 import { schemaReqValidation, schemaResValidation } from '../middleware/validation.js';
 
