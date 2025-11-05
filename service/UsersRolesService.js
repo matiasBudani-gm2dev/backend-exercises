@@ -4,7 +4,7 @@ import {createError} from "../utils/CreateError.js"
 
 import { createUserRoleModel, createPrimaryKeysUserRole, updateUserRolesModel } from "../models/UserRoleModel.js"
 import { findAllUsersWithSpecificRole, findAllRolesFromUser, saveUserRole, findAllUsersRoles, findUserRole, updateUserRoles } from "../repository/UsersRolesRepository.js"
-import { getUserById, getUsersWithoutPassword } from "./UserService.js"
+import { getUserById, getUsersWithoutPassword } from "./userService.js"
 import { getRoleById } from "./RolesService.js"
 
 
