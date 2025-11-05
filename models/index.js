@@ -1,4 +1,4 @@
-import Users from "./UserModel.js";
+import Users from "./userModel.js";
 import UserRole from "./UserRoleModel.js";
 import Roles from "./RoleModel.js";
 
