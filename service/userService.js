@@ -1,9 +1,7 @@
-import {createError} from "../utils/CreateError.js"
+import {createError} from "../utils/createError.js"
 
-import { createUser, validatePassword, updateUser, getUserWithoutPassword} from "../models/UserModel.js";
+import { createUser, updateUser, getUserWithoutPassword} from "../models/UserModel.js";
 import { findAllUsers ,findByEmail, findUserById, saveUser, updateUserById, deleteUserById } from "../repository/UsersRepository.js"
-import { isValidEmail } from "../utils/IsValidEmail.js";
-
 
 
 

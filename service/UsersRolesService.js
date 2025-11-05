@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import {createError} from "../utils/CreateError.js"
+import {createError} from "../utils/createError.js"
 
 import { createUserRoleModel, createPrimaryKeysUserRole, updateUserRolesModel } from "../models/UserRoleModel.js"
 import { findAllUsersWithSpecificRole, findAllRolesFromUser, saveUserRole, findAllUsersRoles, findUserRole, updateUserRoles } from "../repository/UsersRolesRepository.js"

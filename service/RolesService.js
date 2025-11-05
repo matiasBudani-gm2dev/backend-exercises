@@ -1,4 +1,4 @@
-import {createError} from "../utils/CreateError.js"
+import {createError} from "../utils/createError.js"
 
 import { findAllRoles, findRoleById, findRoleByName, saveRole, updateRoleById, deleteRoleById } from "../repository/RolesRepository.js";
 import { createOrUpdateRole } from "../models/RoleModel.js";
