@@ -4,7 +4,7 @@ import userRouter from './routes/usersRoutes.js';
 import roleRouter from './routes/RoleRoutes.js';
 import userRolesRouter from './routes/UsersRolesRoutes.js';
 import authRouter from './routes/AuthRoutes.js';
-import {errorHandling, notFoundHandler}  from './middleware/ErrorHandler.js';
+import {errorHandling, notFoundHandler}  from './middleware/errorHandler.js';
 
 export function createApp(){
     const app = express();
