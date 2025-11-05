@@ -7,7 +7,7 @@ import { createNewUser, getUserbyEmail } from '../service/userService.js';
 import { getRoleByName } from '../service/RolesService.js';
 import { createNewUserRole, getAllRolesFromUser } from '../service/UsersRolesService.js'; 
 import { authorizeRoles, authenticateToken } from '../middleware/authentication.js';
-import { createUserSchema, getUserSchema } from '../schemas/UserSchemas.js';
+import { createUserSchema, getUserSchema } from '../schemas/userSchemas.js';
 import { loginSchema } from '../schemas/authSchemas.js';
 import { schemaReqValidation } from '../middleware/validation.js';
 
