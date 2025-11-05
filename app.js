@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import userRouter from './routes/UsersRoutes.js';
+import userRouter from './routes/usersRoutes.js';
 import roleRouter from './routes/RoleRoutes.js';
 import userRolesRouter from './routes/UsersRolesRoutes.js';
 import authRouter from './routes/AuthRoutes.js';
