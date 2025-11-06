@@ -4,6 +4,8 @@ import logger from "../winstonLogs.js";
 export function errorHandling(err, req, res, next) {
 
     logger.error(err)
+    console.log(err)
+
 
     const mappedError = mapError(err);
 
