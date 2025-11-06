@@ -10,6 +10,7 @@ export function schemaReqValidation(schema){
                 errorMessages += `${detailErr.message}\n`
             })
             res.status(400).send(errorMessages)
+            console.log(errorMessages)
             return
         }
         else{

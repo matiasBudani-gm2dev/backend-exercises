@@ -11,6 +11,7 @@ import { getUserSchema, createUserSchema, updateCompleteUserSchema, updatePartia
 
 userRouter.get('/' ,async (req, res, next ) => {
     try{
+        console.log("hiciste un get de usuarios")
         const users = await getAllUsersInfo()
         users.map(user=>{
             const isError = schemaResValidation(getUserSchema, user)
@@ -29,6 +30,7 @@ userRouter.get('/' ,async (req, res, next ) => {
 userRouter.get('/:id', async (req, res, next) => {
     try{
         const id = (Number(req.params.id))
+        console.log("hiciste un get del usuario", id)
         const user = await getUserById(id)
         const isError = schemaResValidation(getUserSchema, user)
         if(isError){
@@ -45,6 +47,7 @@ userRouter.post('/',
     schemaReqValidation(createUserSchema),
         async (req, res, next) => {     
         try{
+            console.log("hiciste un post de usuario")
             const {user_name, email, password} = req.body
             const passwordHash = await bcrypt.hash(password, 10)
             const user = await createNewUser({user_name, email, passwordHash })
