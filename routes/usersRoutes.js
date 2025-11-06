@@ -12,7 +12,7 @@ import { getUserSchema, createUserSchema, updateCompleteUserSchema, updatePartia
 import { authenticateToken, authorizeRoles } from '../middleware/authentication.js';
 
 
-userRouter.get('/' ,async (req, res, next ) => {
+userRouter.get('/' , authenticateToken, authorizeRoles(["user"]), async (req, res, next ) => {
     try{
         const users = await getAllUsersInfo()
         users.map(user=>{
@@ -29,7 +29,7 @@ userRouter.get('/' ,async (req, res, next ) => {
     }
 })
 
-userRouter.get('/:id', async (req, res, next) => {
+userRouter.get('/:id', authenticateToken, authorizeRoles(["user"]), async (req, res, next) => {
     try{
         const id = (Number(req.params.id))
         const user = await getUserById(id)

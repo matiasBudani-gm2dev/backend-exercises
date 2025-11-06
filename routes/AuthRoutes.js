@@ -48,7 +48,9 @@ authRouter.post("/login", schemaReqValidation(loginSchema) ,async(req, res, next
 
     const token = jwt.sign(userWithRoles, process.env.JWT_SECRET, {expiresIn: "1h"})
 
-    res.status(200).send(token)
+    const accessToken = {accessToken : token}
+
+    res.status(200).send(accessToken)
 })
 
 
