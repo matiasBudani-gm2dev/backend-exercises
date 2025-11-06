@@ -21,11 +21,14 @@ export async function authenticateToken(req, res, next){
     })
 }
 
-export function authorizeRoles(role){
+export function authorizeRoles(addmitedRoles){
     return (req, res, next)=>{
+
+        if(!Array.isArray(addmitedRoles)) res.status(500).send("el programador es medio bobito pobre")
+
         req.user.roles.map(r =>{
             console.log(r)
-            if(r.roleName === role){
+            if(addmitedRoles.includes(r)){
                 next()
             }
         })

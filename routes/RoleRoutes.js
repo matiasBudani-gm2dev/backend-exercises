@@ -11,7 +11,7 @@ import { authenticateToken, authorizeRoles } from '../middleware/authentication.
 const requiredFields = ["role_name"]
 
 
-roleRouter.get("/",  authenticateToken, authorizeRoles("superadmin"), async (req, res, next) =>{
+roleRouter.get("/",  authenticateToken, authorizeRoles(["superadmin"]), async (req, res, next) =>{
     try{
         const roles = await getAllRolesInfo()
         roles.map(role=>{
@@ -27,7 +27,7 @@ roleRouter.get("/",  authenticateToken, authorizeRoles("superadmin"), async (req
     }
 })
 
-roleRouter.get("/:id",  authenticateToken, authorizeRoles("superadmin"), async (req, res, next)=>{
+roleRouter.get("/:id",  authenticateToken, authorizeRoles(["superadmin"]), async (req, res, next)=>{
     try{
         const id = Number(req.params.id)
         const role = await getRoleById(id)
@@ -42,7 +42,7 @@ roleRouter.get("/:id",  authenticateToken, authorizeRoles("superadmin"), async (
     }
 })
 
-roleRouter.post("/", authenticateToken, authorizeRoles("superadmin"), schemaReqValidation(createRoleSchema) ,async (req, res, next) =>{
+roleRouter.post("/", authenticateToken, authorizeRoles(["superadmin"]), schemaReqValidation(createRoleSchema) ,async (req, res, next) =>{
     try{
         const {role_name} = req.body
         const role = await createNewRole({role_name})
@@ -58,7 +58,7 @@ roleRouter.post("/", authenticateToken, authorizeRoles("superadmin"), schemaReqV
 })
 
 
-roleRouter.put("/:id", authenticateToken, authorizeRoles("superadmin"), schemaReqValidation(updateCompleteRoleSchema),async(req, res, next)=>{
+roleRouter.put("/:id", authenticateToken, authorizeRoles(["superadmin"]), schemaReqValidation(updateCompleteRoleSchema),async(req, res, next)=>{
     try{
         const id = Number(req.params.id)
         const {role_name} = req.body
@@ -78,7 +78,7 @@ roleRouter.put("/:id", authenticateToken, authorizeRoles("superadmin"), schemaRe
     
 })
 
-roleRouter.patch("/:id",  authenticateToken, authorizeRoles("superadmin"), schemaReqValidation(updatePartialRoleSchema) ,async(req, res, next)=>{
+roleRouter.patch("/:id",  authenticateToken, authorizeRoles(["superadmin"]), schemaReqValidation(updatePartialRoleSchema) ,async(req, res, next)=>{
     try{
         const id = Number(req.params.id)
         const {role_name} = req.body
@@ -97,7 +97,7 @@ roleRouter.patch("/:id",  authenticateToken, authorizeRoles("superadmin"), schem
     }
 })
 
-roleRouter.delete("/:id",  authenticateToken, authorizeRoles("superadmin"), async(req, res, next)=>{
+roleRouter.delete("/:id",  authenticateToken, authorizeRoles(["superadmin"]), async(req, res, next)=>{
     try{
         const id = Number(req.params.id)
 

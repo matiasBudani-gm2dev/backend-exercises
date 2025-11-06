@@ -52,7 +52,7 @@ authRouter.post("/login", schemaReqValidation(loginSchema) ,async(req, res, next
 })
 
 
-authRouter.get("/admin/dashboard", authenticateToken, authorizeRoles("admin"), (req, res, next)=>{
+authRouter.get("/admin/dashboard", authenticateToken, authorizeRoles(["admin"]), (req, res, next)=>{
     res.json("Entras al admin dashboard")
 })
 

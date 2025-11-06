@@ -10,7 +10,7 @@ import { schemaReqValidation, schemaResValidation } from '../middleware/validati
 
 import { authenticateToken, authorizeRoles } from '../middleware/authentication.js';
 
-userRolesRouter.get("/",  authenticateToken, authorizeRoles("superadmin"), async(req, res, next)=>{
+userRolesRouter.get("/",  authenticateToken, authorizeRoles(["superadmin"]), async(req, res, next)=>{
     try{
         const usersRoles = await getAllUsersRoles()
         usersRoles.map(userRole=>{
@@ -22,7 +22,7 @@ userRolesRouter.get("/",  authenticateToken, authorizeRoles("superadmin"), async
     }
 })
 
-userRolesRouter.get("/:id",  authenticateToken, authorizeRoles("superadmin"), schemaReqValidation(roleIdSchema) ,async(req, res, next)=>{
+userRolesRouter.get("/:id",  authenticateToken, authorizeRoles(["superadmin"]), schemaReqValidation(roleIdSchema) ,async(req, res, next)=>{
     try{
         const user_id = Number(req.params.id)
         const {role_id} = req.body
@@ -41,7 +41,7 @@ userRolesRouter.get("/:id",  authenticateToken, authorizeRoles("superadmin"), sc
     }
 })
 
-userRolesRouter.get("/users/:id",  authenticateToken, authorizeRoles("superadmin"), async (req, res, next)=>{
+userRolesRouter.get("/users/:id",  authenticateToken, authorizeRoles(["superadmin"]), async (req, res, next)=>{
     try{
         const id = Number(req.params.id)
         const users = await getAllUsersWithSpecificRoleInfo(id)
@@ -60,7 +60,7 @@ userRolesRouter.get("/users/:id",  authenticateToken, authorizeRoles("superadmin
 })
 
 
-userRolesRouter.get("/roles/:id", authenticateToken, authorizeRoles("superadmin"), async(req, res, next)=>{
+userRolesRouter.get("/roles/:id", authenticateToken, authorizeRoles(["superadmin"]), async(req, res, next)=>{
     try{
         const id = Number(req.params.id)
         const userWithRoles = await getAllRolesFromUser(id)
@@ -78,7 +78,7 @@ userRolesRouter.get("/roles/:id", authenticateToken, authorizeRoles("superadmin"
     }
 })
 
-userRolesRouter.post("/:id",  authenticateToken, authorizeRoles("superadmin"), schemaReqValidation(roleIdSchema) ,async(req, res, next)=>{
+userRolesRouter.post("/:id",  authenticateToken, authorizeRoles(["superadmin"]), schemaReqValidation(roleIdSchema) ,async(req, res, next)=>{
     try{
         const user_id = Number(req.params.id)
         const {role_id} = req.body
@@ -95,7 +95,7 @@ userRolesRouter.post("/:id",  authenticateToken, authorizeRoles("superadmin"), s
     }
 })
 
-userRolesRouter.put("/:id",  authenticateToken, authorizeRoles("superadmin"), schemaReqValidation(rolesIdArraySchema) ,async (req, res, next)=>{
+userRolesRouter.put("/:id",  authenticateToken, authorizeRoles(["superadmin"]), schemaReqValidation(rolesIdArraySchema) ,async (req, res, next)=>{
     try{
         const user_id = Number(req.params.id)
         const {roles_ids} = req.body
@@ -112,7 +112,7 @@ userRolesRouter.put("/:id",  authenticateToken, authorizeRoles("superadmin"), sc
 })
 
 
-userRolesRouter.delete("/:id",  authenticateToken, authorizeRoles("superadmin"), async(req, res, next)=>{
+userRolesRouter.delete("/:id",  authenticateToken, authorizeRoles(["superadmin"]), async(req, res, next)=>{
     const user_id = Number(req.params.id)
     const user = await updateNewUserRoles({roles_ids: [], user_id})
     user.roles = [{roleId: 2, roleName : "el papu"}]
