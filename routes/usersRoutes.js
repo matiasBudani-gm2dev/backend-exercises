@@ -9,9 +9,11 @@ import { getAllUsersInfo, getUserById, createNewUser, deleteUser, updateUserComp
 import { schemaReqValidation, schemaResValidation } from '../middleware/validation.js';
 import { getUserSchema, createUserSchema, updateCompleteUserSchema, updatePartialUserSchema } from '../schemas/userSchemas.js';
 
+import { authenticateToken, authorizeRoles } from '../middleware/authentication.js';
+
+
 userRouter.get('/' ,async (req, res, next ) => {
     try{
-        console.log("hiciste un get de usuarios")
         const users = await getAllUsersInfo()
         users.map(user=>{
             const isError = schemaResValidation(getUserSchema, user)
@@ -30,7 +32,6 @@ userRouter.get('/' ,async (req, res, next ) => {
 userRouter.get('/:id', async (req, res, next) => {
     try{
         const id = (Number(req.params.id))
-        console.log("hiciste un get del usuario", id)
         const user = await getUserById(id)
         const isError = schemaResValidation(getUserSchema, user)
         if(isError){
@@ -45,9 +46,9 @@ userRouter.get('/:id', async (req, res, next) => {
 
 userRouter.post('/',
     schemaReqValidation(createUserSchema),
+    authenticateToken, authorizeRoles("admin"),
         async (req, res, next) => {     
         try{
-            console.log("hiciste un post de usuario")
             const {user_name, email, password} = req.body
             const passwordHash = await bcrypt.hash(password, 10)
             const user = await createNewUser({user_name, email, passwordHash })
@@ -65,7 +66,10 @@ userRouter.post('/',
 )
 
 
-userRouter.put('/:id', schemaReqValidation(updateCompleteUserSchema), async (req, res, next) => {
+userRouter.put('/:id', 
+    schemaReqValidation(updateCompleteUserSchema), 
+    authenticateToken, authorizeRoles("admin"),
+    async (req, res, next) => {
     try{
         const id = Number(req.params.id)
         const {user_name, email } = req.body;
@@ -83,7 +87,9 @@ userRouter.put('/:id', schemaReqValidation(updateCompleteUserSchema), async (req
 })
 
 
-userRouter.patch('/:id', schemaReqValidation(updatePartialUserSchema), async (req, res, next) => {
+userRouter.patch('/:id', schemaReqValidation(updatePartialUserSchema), 
+authenticateToken, authorizeRoles("admin"),
+async (req, res, next) => {
     try{   
         const id = Number(req.params.id)
         const {user_name, email } = req.body;
@@ -101,7 +107,7 @@ userRouter.patch('/:id', schemaReqValidation(updatePartialUserSchema), async (re
     }
 })
 
-userRouter.delete('/:id', async (req, res, next) => { 
+userRouter.delete('/:id',authenticateToken, authorizeRoles("admin"), async (req, res, next) => { 
     try{ 
         const id = Number(req.params.id)
         const user = await deleteUser(id)
