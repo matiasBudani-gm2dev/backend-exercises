@@ -18,7 +18,7 @@ export function errorHandling(err, req, res, next) {
 
 }
 
-export function notFoundHandler (req, res, next) {
+export function notFoundHandler (err, req, res, next) {
 
     logger.error(err)
 
