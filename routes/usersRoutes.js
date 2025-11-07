@@ -46,7 +46,7 @@ userRouter.get('/:id', authenticateToken, authorizeRoles(["user"]), async (req, 
 
 userRouter.post('/',
     schemaReqValidation(createUserSchema),
-    authenticateToken, authorizeRoles(["admin", "superadmin"]),
+    authenticateToken, authorizeRoles(["admin"]),
         async (req, res, next) => {     
         try{
             const {user_name, email, password} = req.body
@@ -68,7 +68,7 @@ userRouter.post('/',
 
 userRouter.put('/:id', 
     schemaReqValidation(updateCompleteUserSchema), 
-    authenticateToken, authorizeRoles(["admin", "superadmin"]),
+    authenticateToken, authorizeRoles(["admin"]),
     async (req, res, next) => {
     try{
         const id = Number(req.params.id)
@@ -88,7 +88,7 @@ userRouter.put('/:id',
 
 
 userRouter.patch('/:id', schemaReqValidation(updatePartialUserSchema), 
-authenticateToken, authorizeRoles(["admin", "superadmin"]),
+authenticateToken, authorizeRoles(["admin"]),
 async (req, res, next) => {
     try{   
         const id = Number(req.params.id)
@@ -107,7 +107,7 @@ async (req, res, next) => {
     }
 })
 
-userRouter.delete('/:id',authenticateToken, authorizeRoles(["admin", "superadmin"]), async (req, res, next) => { 
+userRouter.delete('/:id',authenticateToken, authorizeRoles(["admin"]), async (req, res, next) => { 
     try{ 
         const id = Number(req.params.id)
         const user = await deleteUser(id)

@@ -1,0 +1,28 @@
+CREATE TABLE users (
+  userId INT AUTO_INCREMENT PRIMARY KEY,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  userName VARCHAR(45) NOT NULL,
+  email VARCHAR(45) UNIQUE,
+  password CHAR(60) NOT NULL
+);
+
+CREATE TABLE roles (
+  roleId INT AUTO_INCREMENT PRIMARY KEY,
+  roleName VARCHAR(45) NOT NULL
+);
+
+CREATE TABLE user_roles (
+  userId INT NOT NULL,
+  roleId INT NOT NULL,
+  PRIMARY KEY (userId, roleId),
+  CONSTRAINT fk_user
+    FOREIGN KEY (userId)
+    REFERENCES users(userId)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT fk_role
+    FOREIGN KEY (roleId)
+    REFERENCES roles(roleId)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
