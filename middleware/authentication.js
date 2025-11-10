@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config"
 import logger from "../winstonLogs.js";
+import { checkForRoles } from "../utils/checkForRoles.js";
 
 export async function authenticateToken(req, res, next){
     const authHeader = req.headers.authorization
@@ -20,16 +21,18 @@ export async function authenticateToken(req, res, next){
 
 export function authorizeRoles(addmitedRoles){
     return (req, res, next)=>{
-
-        if(!Array.isArray(addmitedRoles)) res.status(500).send("el programador es medio bobito pobre")
-
-        req.user.roles.map(r =>{
-            console.log(r)
-            if(addmitedRoles.includes(r)){
-                next()
-            }
-        })
-        res.status(403).send("Forbidden")
-        return
+        const roleNames = req.user.roles.map(role => role.roleName)
+        // const roleNames = []
+        // userRoles.forEach(role=>{
+        //     roleNames.push(role.roleName)
+            
+        // })
+        // console.log(roleNames)
+        // console.log(addmitedRoles)
+        if(checkForRoles(addmitedRoles, roleNames)){
+           return next()
+        }
+        return res.status(403).send("Forbidden")
+        
     }
 }
