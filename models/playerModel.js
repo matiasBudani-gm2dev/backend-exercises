@@ -29,4 +29,7 @@ const Players = sequelize.define("Players", {
     type: DataTypes.STRING,
     allowNull: false
   }
+}, {
+  tableName: "players",
+  timestamps: false
 })
