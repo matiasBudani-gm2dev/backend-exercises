@@ -4,6 +4,7 @@ import userRouter from './routes/usersRoutes.js';
 import roleRouter from './routes/RoleRoutes.js';
 import userRolesRouter from './routes/UsersRolesRoutes.js';
 import authRouter from './routes/AuthRoutes.js';
+import playersRouter from './routes/playerRoutes.js';
 import {errorHandling, notFoundHandler}  from './middleware/errorHandler.js';
 
 export function createApp(){
@@ -30,6 +31,8 @@ export function createApp(){
     app.use("/users-roles", userRolesRouter)
 
     app.use("/auth", authRouter)
+    
+    app.use("/players", playersRouter)
 
     app.use(notFoundHandler)
     

@@ -8,7 +8,7 @@ const Players = sequelize.define("Players", {
     autoIncrement: true,
     allowNull: false
   },
-  createdAt: {
+  created_at: {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: sequelize.literal("CURRENT_TIMESTAMP")
@@ -18,18 +18,20 @@ const Players = sequelize.define("Players", {
     allowNull: false,
     unique: true
   },
+  rating:{
+    type: DataTypes.DECIMAL,
+    allowNull: false
+  },
   position: {
     type: DataTypes.ENUM('forward', 'midfielder', 'defender', 'goalkeeper'),
     allowNull: false
   },
   number : {
-    type: DataTypes.NUMBER
-  },
-  position: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: DataTypes.INTEGER
   }
 }, {
   tableName: "players",
   timestamps: false
 })
+
+export default Players
