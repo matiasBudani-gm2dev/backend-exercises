@@ -12,20 +12,8 @@ export function errorHandling(err, req, res, next) {
             type: mappedError.type,
             message: mappedError.message
         }
-    });
+    })
 
 }
 
-export function notFoundHandler (err, req, res, next) {
-
-    logger.error(err)
-
-    res.status(404).json({
-        error: {
-            type: "Not Found",
-            message: "The requested route does not exist"
-        }
-    });
-}
-
-export default {errorHandling, notFoundHandler};
+export default {errorHandling};

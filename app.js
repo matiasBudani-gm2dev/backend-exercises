@@ -5,7 +5,7 @@ import roleRouter from './routes/RoleRoutes.js';
 import userRolesRouter from './routes/UsersRolesRoutes.js';
 import authRouter from './routes/AuthRoutes.js';
 import playersRouter from './routes/playerRoutes.js';
-import {errorHandling, notFoundHandler}  from './middleware/errorHandler.js';
+import {errorHandling}  from './middleware/errorHandler.js';
 
 export function createApp(){
     const app = express();
@@ -34,11 +34,10 @@ export function createApp(){
     
     app.use("/players", playersRouter)
 
-    app.use(notFoundHandler)
-    
+
     app.use(errorHandling)
 
-    return app
+    return app  
 }
 
 export default createApp

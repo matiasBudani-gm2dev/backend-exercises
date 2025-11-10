@@ -22,13 +22,7 @@ export async function authenticateToken(req, res, next){
 export function authorizeRoles(addmitedRoles){
     return (req, res, next)=>{
         const roleNames = req.user.roles.map(role => role.roleName)
-        // const roleNames = []
-        // userRoles.forEach(role=>{
-        //     roleNames.push(role.roleName)
-            
-        // })
-        // console.log(roleNames)
-        // console.log(addmitedRoles)
+
         if(checkForRoles(addmitedRoles, roleNames)){
            return next()
         }
