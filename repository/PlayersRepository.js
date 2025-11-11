@@ -22,10 +22,10 @@ export async function savePlayer(player) {
   return baseRepository.create(Players, player);
 }
 
-export async function updatePlayerById(id, newPlayerData) {
+export async function updatePlayer(id, newPlayerData) {
   await baseRepository.update(Players, newPlayerData, playersTable.tablePK, id);
 }
 
-export async function deletePlayerById(id) {
+export async function deletePlayer(id) {
   await baseRepository.destroy(Players, playersTable.tablePK, id);
 }
