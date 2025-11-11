@@ -47,7 +47,7 @@ export async function getPlayerByNick(nick) {
 }
 
 export async function createPlayer(newPlayer) {
-  const nickExists = await getPlayerByNick(newPlayer.nick);
+  const nickExists = await findPlayerById(newPlayer.nick);
   if (nickExists) {
     throw createError(400, "Bad request", "Nick already exists");
   }

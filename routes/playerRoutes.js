@@ -50,7 +50,7 @@ playersRouter.post(
     try {
       const { nick, rating, position, number } = req.body;
       const player = await createPlayer({ nick, rating, position, number });
-      res.send(201).send(player);
+      res.status(201).send(player);
     } catch (err) {
       next(err);
     }
