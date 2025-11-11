@@ -9,9 +9,14 @@ import {
   getPlayerByNick,
   createPlayer,
   updateCompletePlayer,
+  updatePartialPlayer,
+  deletePlayer,
 } from "../service/playersService.js";
 
-import { playerSchema } from "../schemas/playerSchemas.js";
+import {
+  playerSchema,
+  updatePartialPlayerSchema,
+} from "../schemas/playerSchemas.js";
 
 playersRouter.get("/", async (req, res, next) => {
   try {
@@ -78,5 +83,36 @@ playersRouter.put(
     }
   },
 );
+
+playersRouter.patch(
+  "/:id",
+  schemaReqValidation(updatePartialPlayerSchema),
+  async (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      const { nick, rating, position, number } = req.body;
+      const player = await updatePartialPlayer(id, {
+        nick,
+        rating,
+        position,
+        number,
+      });
+      res.status(200).send(player);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+playersRouter.delete("/:id", async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const player = await deletePlayer(id);
+
+    res.status(200).send(player);
+  } catch (err) {
+    next(err);
+  }
+});
 
 export default playersRouter;

@@ -6,6 +6,7 @@ import {
   findPlayerByNick,
   savePlayer,
   updatePlayer,
+  deletePlayerById,
 } from "../repository/PlayersRepository.js";
 
 export async function getAllPlayersInfo() {
@@ -64,8 +65,6 @@ export async function updateCompletePlayer(id, playerData) {
     throw createError(400, "Bad request", "The id has to be a number");
   }
 
-  await getPlayerById(id);
-
   const playerExists = await findPlayerById(id);
   if (!playerExists) {
     throw createError(404, "Not found", "Player not found");
@@ -76,4 +75,41 @@ export async function updateCompletePlayer(id, playerData) {
   const playerUpdated = await getPlayerById(id);
 
   return playerUpdated;
+}
+
+export async function updatePartialPlayer(id, playerData) {
+  if (Number.isNaN(id)) {
+    throw createError(400, "Bad request", "The id has to be a number");
+  }
+
+  const playerExists = await findPlayerById(id);
+  if (!playerExists) {
+    throw createError(404, "Not found", "Player not found");
+  }
+
+  for (const [key, value] of Object.entries(playerData)) {
+    if (value === undefined) {
+      delete playerData[key];
+    }
+  }
+
+  await updatePlayer(id, playerData);
+
+  const playerUpdated = await getPlayerById(id);
+
+  return playerUpdated;
+}
+
+export async function deletePlayer(id) {
+  if (Number.isNaN(id)) {
+    throw createError(400, "Bad request", "The id has to be a number");
+  }
+
+  const player = await getPlayerById(id);
+
+  console.log("\n\n\nsadaasldjnasldnja\n\n\n\n");
+
+  await deletePlayerById(id);
+
+  return player;
 }

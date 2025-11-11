@@ -26,6 +26,6 @@ export async function updatePlayer(id, newPlayerData) {
   await baseRepository.update(Players, newPlayerData, playersTable.tablePK, id);
 }
 
-export async function deletePlayer(id) {
+export async function deletePlayerById(id) {
   await baseRepository.destroy(Players, playersTable.tablePK, id);
 }
