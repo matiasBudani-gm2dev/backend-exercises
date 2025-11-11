@@ -57,6 +57,21 @@ userRouter.get(
   },
 );
 
+userRouter.get(
+  "/:id",
+  authenticateToken,
+  authorizeRoles(["user", "admin"]),
+  async (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      const user = await getUserById(id);
+      res.status(200).send(user);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 userRouter.post(
   "/",
   schemaReqValidation(createUserSchema),
