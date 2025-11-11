@@ -4,7 +4,7 @@ import {
   createUser,
   updateUser,
   getUserWithoutPassword,
-} from "../models/userModel.js";
+} from "../models/UserModel.js";
 import {
   findAllUsers,
   findByEmail,
@@ -12,7 +12,7 @@ import {
   saveUser,
   updateUserById,
   deleteUserById,
-} from "../repository/usersRepository.js";
+} from "../repository/UsersRepository.js";
 
 export async function getUsersWithoutPassword(users) {
   if (!Array.isArray(users)) {
