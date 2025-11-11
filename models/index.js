@@ -1,21 +1,21 @@
-import Users from "./userModel.js";
+import Users from "./UserModel.js";
 import UserRole from "./UserRoleModel.js";
 import Roles from "./RoleModel.js";
 
 Users.hasMany(UserRole, {
-    foreignKey: "userId"
-})
+  foreignKey: "userId",
+});
 
 UserRole.belongsTo(Users, {
-    foreignKey: "userId"
-})
+  foreignKey: "userId",
+});
 
 Roles.hasMany(UserRole, {
-    foreignKey: "roleId"
-})
+  foreignKey: "roleId",
+});
 
 UserRole.belongsTo(Roles, {
-    foreignKey: "roleId"
-})
+  foreignKey: "roleId",
+});
 
-export {UserRole, Users, Roles}
+export { UserRole, Users, Roles };
