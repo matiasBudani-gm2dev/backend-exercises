@@ -1,10 +1,10 @@
-import { createError } from '../utils/createError.js';
+import { createError } from "../utils/createError.js";
 
 import {
   createUser,
   updateUser,
   getUserWithoutPassword,
-} from '../models/userModel.js';
+} from "../models/userModel.js";
 import {
   findAllUsers,
   findByEmail,
@@ -12,14 +12,14 @@ import {
   saveUser,
   updateUserById,
   deleteUserById,
-} from '../repository/usersRepository.js';
+} from "../repository/usersRepository.js";
 
 export async function getUsersWithoutPassword(users) {
   if (!Array.isArray(users)) {
-    throw createError(404, 'Not found', `${users} is not a list`);
+    throw createError(404, "Not found", `${users} is not a list`);
   }
   return users.map(
-    ({ password, ...userWithoutPassword }) => userWithoutPassword
+    ({ password, ...userWithoutPassword }) => userWithoutPassword,
   );
 }
 
@@ -34,12 +34,12 @@ export async function getAllUsersInfo() {
 
 export async function getUserById(id) {
   if (Number.isNaN(id)) {
-    throw createError(400, 'Bad request', 'The id has to be a number');
+    throw createError(400, "Bad request", "The id has to be a number");
   }
   const userResult = await findUserById(id);
 
   if (!userResult) {
-    throw createError(404, 'Not found', 'User not Found');
+    throw createError(404, "Not found", "User not Found");
   }
 
   const user = userResult.dataValues;
@@ -53,7 +53,7 @@ export async function getUserbyEmail(email) {
   const userResult = await findByEmail(emailFilter);
 
   if (!userResult) {
-    throw createError(404, 'Not found', 'User not Found');
+    throw createError(404, "Not found", "User not Found");
   }
 
   const user = userResult.dataValues;
@@ -67,13 +67,13 @@ export async function createNewUser(userData) {
   const userFound = await findByEmail(emailFilter);
 
   if (userFound) {
-    throw createError(409, 'Conflict Error', 'El email ya existe');
+    throw createError(409, "Conflict Error", "El email ya existe");
   }
 
   const newUser = await createUser(userData);
 
   if (!newUser) {
-    throw createError(500, 'Internal Server Error', 'User not created');
+    throw createError(500, "Internal Server Error", "User not created");
   }
 
   const userCreated = await saveUser(newUser);
@@ -86,7 +86,7 @@ export async function createNewUser(userData) {
 }
 export async function updateUserComplete(id, userData) {
   if (Number.isNaN(id)) {
-    throw createError(400, 'Bad request', 'The id has to be a number');
+    throw createError(400, "Bad request", "The id has to be a number");
   }
 
   const emailFilter = { email: userData.email };
@@ -94,10 +94,10 @@ export async function updateUserComplete(id, userData) {
   const userFound = await findByEmail(emailFilter);
 
   if (userFound) {
-    throw createError(409, 'Conflict Error', 'Existing email');
+    throw createError(409, "Conflict Error", "Existing email");
   }
   if (!(await findUserById(id))) {
-    throw createError(404, 'Not found', 'User not found');
+    throw createError(404, "Not found", "User not found");
   }
 
   const user = await updateUser(userData);
@@ -111,17 +111,17 @@ export async function updateUserComplete(id, userData) {
 
 export async function updateUserPartial(id, userData) {
   if (Number.isNaN(id)) {
-    throw createError(400, 'Bad request', 'The id has to be a number');
+    throw createError(400, "Bad request", "The id has to be a number");
   }
 
   if (userData.email) {
     const emailFilter = { email: userData.email };
     const userFound = await findByEmail(emailFilter);
-    if (userFound) throw createError(409, 'Conflict Error', 'Existing email');
+    if (userFound) throw createError(409, "Conflict Error", "Existing email");
   }
 
   if (!(await findUserById(id))) {
-    throw createError(404, 'Not found', 'User not found');
+    throw createError(404, "Not found", "User not found");
   }
   const user = await updateUser(userData);
 
@@ -140,7 +140,7 @@ export async function updateUserPartial(id, userData) {
 
 export async function deleteUser(id) {
   if (Number.isNaN(id)) {
-    throw createError(400, 'Bad request', 'The id has to be a number');
+    throw createError(400, "Bad request", "The id has to be a number");
   }
 
   const user = await getUserById(id);

@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from "joi";
 
 const createRoleSchema = Joi.object({
   role_name: Joi.string().min(3).max(45).required(),

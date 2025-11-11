@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from "joi";
 
 const createUserSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -18,7 +18,7 @@ const updatePartialUserSchema = Joi.object({
 
 const getUserSchema = Joi.object({
   userId: Joi.number().integer().min(1).required(),
-  createdAt: Joi.date().max('now').required(),
+  createdAt: Joi.date().max("now").required(),
   email: Joi.string().email().required(),
   userName: Joi.string().min(3).max(45).required(),
 });

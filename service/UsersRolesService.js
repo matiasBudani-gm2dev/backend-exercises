@@ -1,12 +1,12 @@
-import _ from 'lodash';
+import _ from "lodash";
 
-import { createError } from '../utils/createError.js';
+import { createError } from "../utils/createError.js";
 
 import {
   createUserRoleModel,
   createPrimaryKeysUserRole,
   updateUserRolesModel,
-} from '../models/UserRoleModel.js';
+} from "../models/UserRoleModel.js";
 import {
   findAllUsersWithSpecificRole,
   findAllRolesFromUser,
@@ -14,9 +14,9 @@ import {
   findAllUsersRoles,
   findUserRole,
   updateUserRoles,
-} from '../repository/UsersRolesRepository.js';
-import { getUserById, getUsersWithoutPassword } from './userService.js';
-import { getRoleById } from './RolesService.js';
+} from "../repository/UsersRolesRepository.js";
+import { getUserById, getUsersWithoutPassword } from "./userService.js";
+import { getRoleById } from "./RolesService.js";
 
 export async function getAllUsersRoles() {
   return findAllUsersRoles();
@@ -39,12 +39,12 @@ export async function getUserRole(userRoleIds) {
   const user = await getUserById(userId);
 
   if (!user) {
-    throw createError(404, 'Not found', 'The user was not found');
+    throw createError(404, "Not found", "The user was not found");
   }
 
   const role = await getRoleById(roleId);
   if (!role) {
-    throw createError(404, 'Not found', 'The role was not found');
+    throw createError(404, "Not found", "The role was not found");
   }
 
   const newUserRole = await createPrimaryKeysUserRole(userRoleIds);
@@ -52,7 +52,7 @@ export async function getUserRole(userRoleIds) {
   const userRole = await findUserRole(newUserRole);
 
   if (!userRole) {
-    throw createError(404, 'Not found', "User role wasn't found");
+    throw createError(404, "Not found", "User role wasn't found");
   }
 
   return userRole;
@@ -61,7 +61,7 @@ export async function getUserRole(userRoleIds) {
 export async function getAllUsersWithSpecificRoleInfo(roleId) {
   const role = await getRoleById(roleId);
   if (!role) {
-    throw createError(404, 'Not found', 'The role was not found');
+    throw createError(404, "Not found", "The role was not found");
   }
   const users = await findAllUsersWithSpecificRole(roleId);
 
@@ -71,7 +71,7 @@ export async function getAllUsersWithSpecificRoleInfo(roleId) {
 export async function getAllRolesFromUser(userId) {
   const user = await getUserById(userId);
   if (!user) {
-    throw createError(404, 'Not found', 'The role was not found');
+    throw createError(404, "Not found", "The role was not found");
   }
 
   const userWithRoles = await getUserWithRoles(userId);
@@ -87,26 +87,26 @@ export async function createNewUserRole(userRoleData) {
 
   const user = await getUserById(userId);
   if (!user) {
-    throw createError(404, 'Not found', 'The role was not found');
+    throw createError(404, "Not found", "The role was not found");
   }
 
   const role = await getRoleById(roleId);
   if (!role) {
-    throw createError(404, 'Not found', 'The role was not found');
+    throw createError(404, "Not found", "The role was not found");
   }
 
   if (!newUserRole) {
-    throw createError(500, 'Internal server error', 'User role not created');
+    throw createError(500, "Internal server error", "User role not created");
   }
 
-  console.log('holaaaaa');
+  console.log("holaaaaa");
 
   const usersRoles = await getAllUsersRoles();
 
   usersRoles.map((userRole) => {
     if (_.isEqual(userRole.dataValues, newUserRole)) {
       console.log(userRole.dataValues, newUserRole);
-      throw createError(400, 'Bad request', 'User role already exists');
+      throw createError(400, "Bad request", "User role already exists");
     }
   });
 
@@ -124,21 +124,21 @@ export async function updateNewUserRoles(userRoleData) {
   const rolesIds = newUserRoles.rolesIds;
 
   if (!Array.isArray(rolesIds)) {
-    throw createError(400, 'Bad request', 'Roles ids must be an array');
+    throw createError(400, "Bad request", "Roles ids must be an array");
   }
 
   if (Number.isNaN(userId)) {
-    throw createError(400, 'Bad request', 'User id has to be a number');
+    throw createError(400, "Bad request", "User id has to be a number");
   }
 
   for (const r of rolesIds) {
     const roleIdNum = Number(r);
     if (Number.isNaN(roleIdNum)) {
-      throw createError(400, 'Bad request', 'All roles id have to be a number');
+      throw createError(400, "Bad request", "All roles id have to be a number");
     }
     const role = await getRoleById(roleIdNum);
     if (!role) {
-      throw createError(404, 'Not found', 'The role was not found');
+      throw createError(404, "Not found", "The role was not found");
     }
   }
 
@@ -146,7 +146,7 @@ export async function updateNewUserRoles(userRoleData) {
 
   const user = await getUserById(userId);
   if (!user) {
-    throw createError(404, 'Not found', 'The user was not found');
+    throw createError(404, "Not found", "The user was not found");
   }
 
   await updateUserRoles(userId, rolesIdsNums);

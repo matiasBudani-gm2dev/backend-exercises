@@ -1,9 +1,9 @@
-import Roles from '../models/RoleModel.js';
-import baseRepository from './BaseRepository.js';
+import Roles from "../models/RoleModel.js";
+import baseRepository from "./BaseRepository.js";
 
 const rolesTable = {
-  tableName: 'roles',
-  tablePK: 'roleId',
+  tableName: "roles",
+  tablePK: "roleId",
 };
 
 export async function findAllRoles() {

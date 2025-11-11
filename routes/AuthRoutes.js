@@ -1,35 +1,35 @@
-import express from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import 'dotenv/config';
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import "dotenv/config";
 
-import { createNewUser, getUserbyEmail } from '../service/userService.js';
-import { getRoleByName } from '../service/RolesService.js';
+import { createNewUser, getUserbyEmail } from "../service/userService.js";
+import { getRoleByName } from "../service/RolesService.js";
 import {
   createNewUserRole,
   getAllRolesFromUser,
-} from '../service/UsersRolesService.js';
+} from "../service/UsersRolesService.js";
 import {
   authorizeRoles,
   authenticateToken,
-} from '../middleware/authentication.js';
-import { createUserSchema, getUserSchema } from '../schemas/userSchemas.js';
-import { loginSchema } from '../schemas/authSchemas.js';
-import { schemaReqValidation } from '../middleware/validation.js';
+} from "../middleware/authentication.js";
+import { createUserSchema, getUserSchema } from "../schemas/userSchemas.js";
+import { loginSchema } from "../schemas/authSchemas.js";
+import { schemaReqValidation } from "../middleware/validation.js";
 
 const authRouter = express.Router();
 
-const requiredFields = ['user_name', 'password'];
+const requiredFields = ["user_name", "password"];
 
 authRouter.post(
-  '/register',
+  "/register",
   schemaReqValidation(createUserSchema),
   async (req, res, next) => {
     try {
       const { user_name, email, password } = req.body;
       const passwordHash = await bcrypt.hash(password, 10);
 
-      const roleUser = await getRoleByName('user');
+      const roleUser = await getRoleByName("user");
 
       const newUser = await createNewUser({ user_name, email, passwordHash });
 
@@ -42,11 +42,11 @@ authRouter.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 authRouter.post(
-  '/login',
+  "/login",
   schemaReqValidation(loginSchema),
   async (req, res, next) => {
     const { email, password } = req.body;
@@ -54,27 +54,27 @@ authRouter.post(
 
     const passwordOk = await bcrypt.compare(password, user.password);
 
-    if (!passwordOk) return res.status(400).send('Credenciales invalidas');
+    if (!passwordOk) return res.status(400).send("Credenciales invalidas");
 
     const userWithRoles = await getAllRolesFromUser(user.userId);
 
     const token = jwt.sign(userWithRoles, process.env.JWT_SECRET, {
-      expiresIn: '1h',
+      expiresIn: "1h",
     });
 
     const accessToken = { accessToken: token };
 
     res.status(200).send(accessToken);
-  }
+  },
 );
 
 authRouter.get(
-  '/admin/dashboard',
+  "/admin/dashboard",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   (req, res, next) => {
-    res.json('Entras al admin dashboard');
-  }
+    res.json("Entras al admin dashboard");
+  },
 );
 
 export default authRouter;

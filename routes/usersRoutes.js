@@ -1,5 +1,5 @@
-import express from 'express';
-import bcrypt from 'bcryptjs';
+import express from "express";
+import bcrypt from "bcryptjs";
 
 const userRouter = express.Router();
 
@@ -10,28 +10,28 @@ import {
   deleteUser,
   updateUserComplete,
   updateUserPartial,
-} from '../service/userService.js';
+} from "../service/userService.js";
 
 import {
   schemaReqValidation,
   schemaResValidation,
-} from '../middleware/validation.js';
+} from "../middleware/validation.js";
 import {
   getUserSchema,
   createUserSchema,
   updateCompleteUserSchema,
   updatePartialUserSchema,
-} from '../schemas/userSchemas.js';
+} from "../schemas/userSchemas.js";
 
 import {
   authenticateToken,
   authorizeRoles,
-} from '../middleware/authentication.js';
+} from "../middleware/authentication.js";
 
 userRouter.get(
-  '/',
+  "/",
   authenticateToken,
-  authorizeRoles(['user', 'admin']),
+  authorizeRoles(["user", "admin"]),
   async (req, res, next) => {
     try {
       const users = await getAllUsersInfo();
@@ -39,13 +39,13 @@ userRouter.get(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 userRouter.get(
-  '/:id',
+  "/:id",
   authenticateToken,
-  authorizeRoles(['user', 'admin']),
+  authorizeRoles(["user", "admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -54,14 +54,14 @@ userRouter.get(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 userRouter.post(
-  '/',
+  "/",
   schemaReqValidation(createUserSchema),
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const { user_name, email, password } = req.body;
@@ -72,14 +72,14 @@ userRouter.post(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 userRouter.put(
-  '/:id',
+  "/:id",
   schemaReqValidation(updateCompleteUserSchema),
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -90,14 +90,14 @@ userRouter.put(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 userRouter.patch(
-  '/:id',
+  "/:id",
   schemaReqValidation(updatePartialUserSchema),
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -109,13 +109,13 @@ userRouter.patch(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 userRouter.delete(
-  '/:id',
+  "/:id",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -124,7 +124,7 @@ userRouter.delete(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 export default userRouter;

@@ -8,7 +8,7 @@ export function createError(statusCode, type, message) {
   }
   return {
     statusCode: 500,
-    type: 'INTERNAL_SERVER_ERROR',
-    message: 'Unexpected error',
+    type: "INTERNAL_SERVER_ERROR",
+    message: "Unexpected error",
   };
 }

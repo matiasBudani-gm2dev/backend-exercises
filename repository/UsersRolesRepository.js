@@ -1,12 +1,12 @@
-import baseRepository from './BaseRepository.js';
-import { Users, Roles, UserRole } from '../models/index.js';
+import baseRepository from "./BaseRepository.js";
+import { Users, Roles, UserRole } from "../models/index.js";
 
 const usersRolesTable = {
-  usersTableName: 'users',
-  rolesTableName: 'roles',
-  usersRolesTableName: 'user_roles',
-  tableUserPK: 'userId',
-  tableRolePK: 'roleId',
+  usersTableName: "users",
+  rolesTableName: "roles",
+  usersRolesTableName: "user_roles",
+  tableUserPK: "userId",
+  tableRolePK: "roleId",
 };
 
 const {

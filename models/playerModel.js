@@ -1,8 +1,8 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../boostrap.js';
+import { DataTypes } from "sequelize";
+import { sequelize } from "../boostrap.js";
 
 const Players = sequelize.define(
-  'Players',
+  "Players",
   {
     player_id: {
       type: DataTypes.INTEGER,
@@ -13,7 +13,7 @@ const Players = sequelize.define(
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
     },
     nick: {
       type: DataTypes.STRING,
@@ -25,7 +25,7 @@ const Players = sequelize.define(
       allowNull: false,
     },
     position: {
-      type: DataTypes.ENUM('forward', 'midfielder', 'defender', 'goalkeeper'),
+      type: DataTypes.ENUM("forward", "midfielder", "defender", "goalkeeper"),
       allowNull: false,
     },
     number: {
@@ -33,9 +33,9 @@ const Players = sequelize.define(
     },
   },
   {
-    tableName: 'players',
+    tableName: "players",
     timestamps: false,
-  }
+  },
 );
 
 export default Players;

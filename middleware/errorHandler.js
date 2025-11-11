@@ -1,5 +1,5 @@
-import { mapError } from '../utils/errorsMapper.js';
-import logger from '../winstonLogs.js';
+import { mapError } from "../utils/errorsMapper.js";
+import logger from "../winstonLogs.js";
 
 export function errorHandling(err, req, res, next) {
   logger.error(err);

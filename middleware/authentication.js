@@ -1,13 +1,13 @@
-import jwt from 'jsonwebtoken';
-import 'dotenv/config';
-import logger from '../winstonLogs.js';
-import { checkForRoles } from '../utils/checkForRoles.js';
+import jwt from "jsonwebtoken";
+import "dotenv/config";
+import logger from "../winstonLogs.js";
+import { checkForRoles } from "../utils/checkForRoles.js";
 
 export async function authenticateToken(req, res, next) {
   const authHeader = req.headers.authorization;
-  const token = authHeader?.split(' ')[1];
+  const token = authHeader?.split(" ")[1];
 
-  if (!token) return res.status(401).send('Invalid token');
+  if (!token) return res.status(401).send("Invalid token");
 
   jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
     if (err) {
@@ -26,6 +26,6 @@ export function authorizeRoles(addmitedRoles) {
     if (checkForRoles(addmitedRoles, roleNames)) {
       return next();
     }
-    return res.status(403).send('Forbidden');
+    return res.status(403).send("Forbidden");
   };
 }

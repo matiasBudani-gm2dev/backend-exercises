@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 const userRolesRouter = express.Router();
 
 import {
@@ -8,7 +8,7 @@ import {
   getAllUsersRoles,
   updateNewUserRoles,
   getUserRole,
-} from '../service/UsersRolesService.js';
+} from "../service/UsersRolesService.js";
 
 import {
   getUserRolesSchema,
@@ -16,23 +16,23 @@ import {
   roleIdSchema,
   rolesIdArraySchema,
   deleteUserWithEmptyRolesSchema,
-} from '../schemas/userRolesSchemas.js';
-import { getUserSchema } from '../schemas/userSchemas.js';
+} from "../schemas/userRolesSchemas.js";
+import { getUserSchema } from "../schemas/userSchemas.js";
 
 import {
   schemaReqValidation,
   schemaResValidation,
-} from '../middleware/validation.js';
+} from "../middleware/validation.js";
 
 import {
   authenticateToken,
   authorizeRoles,
-} from '../middleware/authentication.js';
+} from "../middleware/authentication.js";
 
 userRolesRouter.get(
-  '/',
+  "/",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const usersRoles = await getAllUsersRoles();
@@ -43,13 +43,13 @@ userRolesRouter.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 userRolesRouter.get(
-  '/:id',
+  "/:id",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   schemaReqValidation(roleIdSchema),
   async (req, res, next) => {
     try {
@@ -67,13 +67,13 @@ userRolesRouter.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 userRolesRouter.get(
-  '/users/:id',
+  "/users/:id",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -90,13 +90,13 @@ userRolesRouter.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 userRolesRouter.get(
-  '/roles/:id',
+  "/roles/:id",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -104,7 +104,7 @@ userRolesRouter.get(
 
       const isError = schemaResValidation(
         getUserWithRolesSchema,
-        userWithRoles
+        userWithRoles,
       );
       if (isError) {
         res.status(400).send(isError);
@@ -115,13 +115,13 @@ userRolesRouter.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 userRolesRouter.post(
-  '/:id',
+  "/:id",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   schemaReqValidation(roleIdSchema),
   async (req, res, next) => {
     try {
@@ -130,7 +130,7 @@ userRolesRouter.post(
       const userWithRoles = await createNewUserRole({ role_id, user_id });
       const isError = schemaResValidation(
         getUserWithRolesSchema,
-        userWithRoles
+        userWithRoles,
       );
       if (isError) {
         res.status(400).send(isError);
@@ -140,13 +140,13 @@ userRolesRouter.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 userRolesRouter.put(
-  '/:id',
+  "/:id",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   schemaReqValidation(rolesIdArraySchema),
   async (req, res, next) => {
     try {
@@ -155,7 +155,7 @@ userRolesRouter.put(
       const userWithRoles = await updateNewUserRoles({ roles_ids, user_id });
       const isError = schemaResValidation(
         getUserWithRolesSchema,
-        userWithRoles
+        userWithRoles,
       );
       if (isError) {
         res.status(400).send(isError);
@@ -165,24 +165,24 @@ userRolesRouter.put(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 userRolesRouter.delete(
-  '/:id',
+  "/:id",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   async (req, res, next) => {
     const user_id = Number(req.params.id);
     const user = await updateNewUserRoles({ roles_ids: [], user_id });
-    user.roles = [{ roleId: 2, roleName: 'el papu' }];
+    user.roles = [{ roleId: 2, roleName: "el papu" }];
     const isError = schemaResValidation(deleteUserWithEmptyRolesSchema, user);
     if (isError) {
       res.status(400).send(isError);
       return;
     }
     res.status(200).send(user);
-  }
+  },
 );
 
 export default userRolesRouter;

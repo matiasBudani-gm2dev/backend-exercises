@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 const roleRouter = express.Router();
 
 import {
@@ -8,30 +8,30 @@ import {
   updateRoleComplete,
   updateRolePartial,
   deleteRole,
-} from '../service/RolesService.js';
+} from "../service/RolesService.js";
 
 import {
   schemaReqValidation,
   schemaResValidation,
-} from '../middleware/validation.js';
+} from "../middleware/validation.js";
 import {
   getRoleSchema,
   createRoleSchema,
   updateCompleteRoleSchema,
   updatePartialRoleSchema,
-} from '../schemas/rolesSchemas.js';
+} from "../schemas/rolesSchemas.js";
 
 import {
   authenticateToken,
   authorizeRoles,
-} from '../middleware/authentication.js';
+} from "../middleware/authentication.js";
 
-const requiredFields = ['role_name'];
+const requiredFields = ["role_name"];
 
 roleRouter.get(
-  '/',
+  "/",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const roles = await getAllRolesInfo();
@@ -46,13 +46,13 @@ roleRouter.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 roleRouter.get(
-  '/:id',
+  "/:id",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -66,13 +66,13 @@ roleRouter.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 roleRouter.post(
-  '/',
+  "/",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   schemaReqValidation(createRoleSchema),
   async (req, res, next) => {
     try {
@@ -87,13 +87,13 @@ roleRouter.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 roleRouter.put(
-  '/:id',
+  "/:id",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   schemaReqValidation(updateCompleteRoleSchema),
   async (req, res, next) => {
     try {
@@ -112,13 +112,13 @@ roleRouter.put(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 roleRouter.patch(
-  '/:id',
+  "/:id",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   schemaReqValidation(updatePartialRoleSchema),
   async (req, res, next) => {
     try {
@@ -137,13 +137,13 @@ roleRouter.patch(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 roleRouter.delete(
-  '/:id',
+  "/:id",
   authenticateToken,
-  authorizeRoles(['admin']),
+  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -160,7 +160,7 @@ roleRouter.delete(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 export default roleRouter;

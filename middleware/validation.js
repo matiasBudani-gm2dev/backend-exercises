@@ -1,16 +1,18 @@
-import logger from '../winstonLogs.js';
+import logger from "../winstonLogs.js";
 
 export function schemaReqValidation(schema) {
   return (req, res, next) => {
-    const { error, value } = schema.validate(req.body, {
+    const { error, value } = schema.validate(req.body || {}, {
       abortEarly: false,
       stripUnknown: true,
     });
     if (error) {
-      let errorMessages = '';
+      let errorMessages = {};
       error.details.map((detailErr) => {
         logger.info(detailErr);
-        errorMessages += `${detailErr.message}\n`;
+        const field =
+          detailErr.context.label || detailErr.path?.[0] || "unknown";
+        errorMessages[field] = detailErr.message;
       });
       res.status(400).send(errorMessages);
       console.log(errorMessages);
@@ -27,10 +29,11 @@ export function schemaResValidation(schema, response) {
     stripUnknown: true,
   });
   if (error) {
-    let errorMessages = '';
-    error.details.forEach((detailErr) => {
+    let errorMessages = {};
+    error.details.map((detailErr) => {
       logger.info(detailErr);
-      errorMessages += `${detailErr.message}\n`;
+      const field = detailErr.context.label || detailErr.path?.[0] || "unknown";
+      errorMessages[field] = detailErr.message;
     });
     return errorMessages;
   } else {

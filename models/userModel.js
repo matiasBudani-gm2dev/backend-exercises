@@ -1,8 +1,8 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../boostrap.js';
+import { DataTypes } from "sequelize";
+import { sequelize } from "../boostrap.js";
 
 const Users = sequelize.define(
-  'Users',
+  "Users",
   {
     userId: {
       type: DataTypes.INTEGER,
@@ -12,7 +12,7 @@ const Users = sequelize.define(
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
     },
     userName: {
       type: DataTypes.STRING,
@@ -32,9 +32,9 @@ const Users = sequelize.define(
     },
   },
   {
-    tableName: 'users',
+    tableName: "users",
     timestamps: false,
-  }
+  },
 );
 
 export function validatePassword(password) {

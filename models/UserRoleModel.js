@@ -1,34 +1,34 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../boostrap.js';
+import { DataTypes } from "sequelize";
+import { sequelize } from "../boostrap.js";
 
 const UserRole = sequelize.define(
-  'UserRole',
+  "UserRole",
   {
     userId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       references: {
-        model: 'Users',
-        key: 'userId',
+        model: "Users",
+        key: "userId",
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE',
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
     },
     roleId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       references: {
-        model: 'Roles',
-        key: 'id',
+        model: "Roles",
+        key: "id",
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE',
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
     },
   },
   {
-    tableName: 'user_roles',
+    tableName: "user_roles",
     timestamps: false,
-  }
+  },
 );
 
 export async function createUserRoleModel(userRoleDTO) {

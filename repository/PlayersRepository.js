@@ -1,9 +1,9 @@
-import baseRepository from './BaseRepository.js';
-import Players from '../models/playerModel.js';
+import baseRepository from "./BaseRepository.js";
+import Players from "../models/playerModel.js";
 
 const playersTable = {
-  tableName: 'players',
-  tablePK: 'player_id',
+  tableName: "players",
+  tablePK: "player_id",
 };
 
 export async function findAllPlayers() {

@@ -1,8 +1,8 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../boostrap.js';
+import { DataTypes } from "sequelize";
+import { sequelize } from "../boostrap.js";
 
 const Roles = sequelize.define(
-  'Roles',
+  "Roles",
   {
     roleId: {
       type: DataTypes.INTEGER,
@@ -16,9 +16,9 @@ const Roles = sequelize.define(
     },
   },
   {
-    tableName: 'roles',
+    tableName: "roles",
     timestamps: false,
-  }
+  },
 );
 
 export async function createOrUpdateRole(roleDTO) {

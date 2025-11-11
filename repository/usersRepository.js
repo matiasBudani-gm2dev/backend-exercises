@@ -1,9 +1,9 @@
-import baseRepository from './BaseRepository.js';
-import Users from '../models/userModel.js';
+import baseRepository from "./BaseRepository.js";
+import Users from "../models/userModel.js";
 
 const usersTable = {
-  tableName: 'users',
-  tablePK: 'userId',
+  tableName: "users",
+  tablePK: "userId",
 };
 
 export async function findAllUsers() {

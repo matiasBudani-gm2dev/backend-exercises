@@ -1,4 +1,4 @@
-import logger from '../winstonLogs.js';
+import logger from "../winstonLogs.js";
 
 const baseRepository = {
   findAll: async (paramTable) => await paramTable.findAll(),
@@ -11,7 +11,7 @@ const baseRepository = {
     LeftModel,
     RightModel,
     rightModelKey,
-    rightModelKeyValue
+    rightModelKeyValue,
   ) => {
     try {
       const rows = await LeftModel.findAll({
