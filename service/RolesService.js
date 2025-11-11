@@ -1,108 +1,112 @@
-import {createError} from "../utils/createError.js"
+import { createError } from "../utils/createError.js";
 
-import { findAllRoles, findRoleById, findRoleByName, saveRole, updateRoleById, deleteRoleById } from "../repository/RolesRepository.js";
+import {
+  findAllRoles,
+  findRoleById,
+  findRoleByName,
+  saveRole,
+  updateRoleById,
+  deleteRoleById,
+} from "../repository/RolesRepository.js";
 import { createOrUpdateRole } from "../models/RoleModel.js";
 
-export async function getAllRolesInfo(){
-    return findAllRoles()
+export async function getAllRolesInfo() {
+  return findAllRoles();
 }
 
-export async function getRoleById(id){
-    const role = await findRoleById(id)
-    console.log(role)
-    if(!role){
-        console.log("entre aca entonces")
-        throw createError(404, "Role not found", "Role wasnt found")
-    }
-    return role
+export async function getRoleById(id) {
+  const role = await findRoleById(id);
+  console.log(role);
+  if (!role) {
+    console.log("entre aca entonces");
+    throw createError(404, "Role not found", "Role wasnt found");
+  }
+  return role;
 }
 
-export async function getRoleByName(name){
-    const nameFilter = {
-        roleName : name
-    }
-    const role = await findRoleByName(nameFilter)
-    if(!role){
-        throw createError(404, "Not found", "Role not found")
-    }
-    return role
+export async function getRoleByName(name) {
+  const nameFilter = {
+    roleName: name,
+  };
+  const role = await findRoleByName(nameFilter);
+  if (!role) {
+    throw createError(404, "Not found", "Role not found");
+  }
+  return role;
 }
 
-export async function createNewRole(roleData){
-    const newRole = await createOrUpdateRole(roleData)
+export async function createNewRole(roleData) {
+  const newRole = await createOrUpdateRole(roleData);
 
-    if(!newRole){
-        throw createError(500, "Internal server error", "Role was not created")
-    }
+  if (!newRole) {
+    throw createError(500, "Internal server error", "Role was not created");
+  }
 
-    const roleCreatedResult = await saveRole(newRole)
+  const roleCreatedResult = await saveRole(newRole);
 
-    const roleCreatedId = roleCreatedResult.dataValues.roleId
+  const roleCreatedId = roleCreatedResult.dataValues.roleId;
 
-    const createdRole = await getRoleById(roleCreatedId)
+  const createdRole = await getRoleById(roleCreatedId);
 
-    return createdRole
+  return createdRole;
 }
 
-export async function updateRoleComplete(id, roleData){
+export async function updateRoleComplete(id, roleData) {
+  if (Number.isNaN(id)) {
+    throw createError(400, "Bad request", "The id has to be a number");
+  }
 
-    if(Number.isNaN(id)){
-        throw createError(400, "Bad request", "The id has to be a number")
-    }
+  if (!(await findRoleById(id))) {
+    throw createError(404, "Not found", "Role not found");
+  }
 
-    if(!(await findRoleById(id))){
-        throw createError(404, "Not found", "Role not found")
-    }
+  const newRole = await createOrUpdateRole(roleData);
 
-    const newRole = await createOrUpdateRole(roleData)
+  if (!newRole) {
+    throw createError(500, "Internal server error", "User was not updated");
+  }
 
-    if(!newRole){
-        throw createError(500, "Internal server error", "User was not updated")
-    }
+  await updateRoleById(id, newRole);
 
-    await updateRoleById(id, newRole)
+  const updatedRole = await getRoleById(id);
 
-    const updatedRole = await getRoleById(id)
-
-    return updatedRole
+  return updatedRole;
 }
 
-export async function updateRolePartial(id, roleData){
+export async function updateRolePartial(id, roleData) {
+  if (Number.isNaN(id)) {
+    throw createError(400, "Bad request", "The id has to be a number");
+  }
 
-    if(Number.isNaN(id)){
-        throw createError(400, "Bad request", "The id has to be a number")
+  if (!(await findRoleById(id))) {
+    throw createError(404, "Not found", "Role not found");
+  }
+
+  const newRole = await createOrUpdateRole(roleData);
+
+  if (!newRole) {
+    throw createError(500, "Internal server error", "User was not updated");
+  }
+
+  for (const [key, value] of Object.entries(roleData)) {
+    if (value === undefined) {
+      delete userData[key];
     }
+  }
 
-    if(!(await findRoleById(id))){
-        throw createError(404, "Not found", "Role not found")
-    }
+  await updateRoleById(id, newRole);
 
-    const newRole = await createOrUpdateRole(roleData)
+  const updatedRole = await getRoleById(id);
 
-    if(!newRole){
-        throw createError(500, "Internal server error", "User was not updated")
-    }
-
-    for (const [key, value] of Object.entries(roleData)) {
-        if(value === undefined){
-            delete userData[key]
-        }
-    }
-
-    await updateRoleById(id, newRole)
-
-    const updatedRole = await getRoleById(id)
-
-    return updatedRole
+  return updatedRole;
 }
 
-export async function deleteRole(id){
+export async function deleteRole(id) {
+  if (Number.isNaN(id)) {
+    throw createError(400, "Bad request", "The id has to be a number");
+  }
 
-    if(Number.isNaN(id)){
-        throw createError(400, "Bad request", "The id has to be a number")
-    }
-
-    const role = getRoleById(id)
-    deleteRoleById(id)
-    return role
+  const role = getRoleById(id);
+  deleteRoleById(id);
+  return role;
 }

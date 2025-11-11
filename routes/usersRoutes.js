@@ -1,23 +1,58 @@
-import express from 'express';
+import express from "express";
 import bcrypt from "bcryptjs";
 
 const userRouter = express.Router();
 
-import { getAllUsersInfo, getUserById, createNewUser, deleteUser, updateUserComplete, updateUserPartial } from '../service/userService.js';
+import {
+  getAllUsersInfo,
+  getUserById,
+  createNewUser,
+  deleteUser,
+  updateUserComplete,
+  updateUserPartial,
+} from "../service/userService.js";
 
-import { schemaReqValidation, schemaResValidation } from '../middleware/validation.js';
-import { getUserSchema, createUserSchema, updateCompleteUserSchema, updatePartialUserSchema } from '../schemas/userSchemas.js';
+import {
+  schemaReqValidation,
+  schemaResValidation,
+} from "../middleware/validation.js";
+import {
+  getUserSchema,
+  createUserSchema,
+  updateCompleteUserSchema,
+  updatePartialUserSchema,
+} from "../schemas/userSchemas.js";
 
-import { authenticateToken, authorizeRoles } from '../middleware/authentication.js';
+import {
+  authenticateToken,
+  authorizeRoles,
+} from "../middleware/authentication.js";
 
-
-userRouter.get('/' , authenticateToken, authorizeRoles(["user", "admin"]), async (req, res, next ) => {
-    try{
-        const users = await getAllUsersInfo()
-        res.status(200).send(users)
+userRouter.get(
+  "/",
+  authenticateToken,
+  authorizeRoles(["user", "admin"]),
+  async (req, res, next) => {
+    try {
+      const users = await getAllUsersInfo();
+      res.status(200).send(users);
+    } catch (error) {
+      next(error);
     }
-    catch(error){
-        next(error)
+  },
+);
+
+userRouter.get(
+  "/:id",
+  authenticateToken,
+  authorizeRoles(["user", "admin"]),
+  async (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      const user = await getUserById(id);
+      res.status(200).send(user);
+    } catch (error) {
+      next(error);
     }
 })
 
@@ -85,9 +120,22 @@ userRouter.delete('/:id',authenticateToken, authorizeRoles(["admin"]), async (re
         const user = await deleteUser(id)
         res.status(200).send(user)
     }
-    catch(error){
-        next(error)
+  },
+);
+
+userRouter.delete(
+  "/:id",
+  authenticateToken,
+  authorizeRoles(["admin"]),
+  async (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      const user = await deleteUser(id);
+      res.status(200).send(user);
+    } catch (error) {
+      next(error);
     }
-})
+  },
+);
 
 export default userRouter;

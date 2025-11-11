@@ -1,29 +1,30 @@
-
 import { DataTypes } from "sequelize";
-import {sequelize} from "../boostrap.js";
+import { sequelize } from "../boostrap.js";
 
-const Roles = sequelize.define("Roles", {
-  roleId: {
-    type: DataTypes.INTEGER, 
-    primaryKey: true, 
-    autoIncrement: true 
+const Roles = sequelize.define(
+  "Roles",
+  {
+    roleId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    roleName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
   },
-  roleName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true
-  }
-},
-{
-  tableName: "roles",
-  timestamps: false
-})
+  {
+    tableName: "roles",
+    timestamps: false,
+  },
+);
 
-
-export async function createOrUpdateRole(roleDTO){
-    return {
-        "roleName" : roleDTO.role_name
-    }
+export async function createOrUpdateRole(roleDTO) {
+  return {
+    roleName: roleDTO.role_name,
+  };
 }
 
-export default Roles
+export default Roles;
