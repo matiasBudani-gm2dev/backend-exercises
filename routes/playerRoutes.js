@@ -8,9 +8,10 @@ import {
   getPlayerById,
   getPlayerByNick,
   createPlayer,
+  updateCompletePlayer,
 } from "../service/playersService.js";
 
-import { createPlayerSchema } from "../schemas/playerSchemas.js";
+import { playerSchema } from "../schemas/playerSchemas.js";
 
 playersRouter.get("/", async (req, res, next) => {
   try {
@@ -45,12 +46,33 @@ playersRouter.get("/nick/:nick", async (req, res, next) => {
 
 playersRouter.post(
   "/",
-  schemaReqValidation(createPlayerSchema),
+  schemaReqValidation(playerSchema),
   async (req, res, next) => {
     try {
       const { nick, rating, position, number } = req.body;
       const player = await createPlayer({ nick, rating, position, number });
       res.status(201).send(player);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+playersRouter.put(
+  "/:id",
+  schemaReqValidation(playerSchema),
+  async (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+
+      const { nick, rating, position, number } = req.body;
+      const player = await updateCompletePlayer(id, {
+        nick,
+        rating,
+        position,
+        number,
+      });
+      res.status(200).send(player);
     } catch (err) {
       next(err);
     }

@@ -5,6 +5,7 @@ import {
   findPlayerById,
   findPlayerByNick,
   savePlayer,
+  updatePlayer,
 } from "../repository/PlayersRepository.js";
 
 export async function getAllPlayersInfo() {
@@ -23,7 +24,6 @@ export async function getPlayerById(id) {
 
   const playerResult = await findPlayerById(id);
   if (!playerResult) {
-    console.log("entre aca");
     throw createError(404, "Not found", "Player not found");
   }
 
@@ -57,4 +57,23 @@ export async function createPlayer(newPlayer) {
   const playerCreated = playerCreatedResult.dataValues;
 
   return playerCreated;
+}
+
+export async function updateCompletePlayer(id, playerData) {
+  if (Number.isNaN(id)) {
+    throw createError(400, "Bad request", "The id has to be a number");
+  }
+
+  await getPlayerById(id);
+
+  const playerExists = await findPlayerById(id);
+  if (!playerExists) {
+    throw createError(404, "Not found", "Player not found");
+  }
+
+  await updatePlayer(id, playerData);
+
+  const playerUpdated = await getPlayerById(id);
+
+  return playerUpdated;
 }
