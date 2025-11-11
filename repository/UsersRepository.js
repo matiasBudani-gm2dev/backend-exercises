@@ -1,31 +1,32 @@
-import baseRepository from "./BaseRepository.js";
-import Users from "../models/UserModel.js";
+import baseRepository from "./BaseRepository.js"
+import Users from "../models/userModel.js"
 
 const usersTable = {
-  tableName: "users",
-  tablePK: "userId",
-};
-
-export async function findAllUsers() {
-  return baseRepository.findAll(Users);
+    tableName : "users",
+    tablePK: "userId"
 }
 
-export async function findUserById(id) {
-  return baseRepository.findByPk(Users, id);
+export async function findAllUsers(){
+    return baseRepository.findAll(Users)
 }
 
-export async function findByEmail(email) {
-  return baseRepository.findOne(Users, email);
+export async function findUserById(id){
+    return baseRepository.findByPk(Users, id)
 }
 
-export async function saveUser(user) {
-  return baseRepository.create(Users, user);
+export async function findByEmail(email){
+    return baseRepository.findOne(Users, email)
 }
 
-export async function updateUserById(id, newUserData) {
-  await baseRepository.update(Users, newUserData, usersTable.tablePK, id);
+export async function saveUser(user){
+   return baseRepository.create(Users, user)
 }
 
-export async function deleteUserById(id) {
-  await baseRepository.destroy(Users, usersTable.tablePK, id);
+export async function updateUserById(id, newUserData){
+    await baseRepository.update(Users, newUserData, usersTable.tablePK, id)
+}
+
+export async function deleteUserById(id){
+    await baseRepository.destroy(Users, usersTable.tablePK, id)
+    //deleteById(id, usersTable.tableName, usersTable.tablePK)
 }
