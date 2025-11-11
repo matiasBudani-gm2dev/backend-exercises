@@ -1,5 +1,5 @@
 import baseRepository from "./BaseRepository.js";
-import Users from "../models/userModel.js";
+import Users from "../models/UserModel.js";
 
 const usersTable = {
   tableName: "users",
