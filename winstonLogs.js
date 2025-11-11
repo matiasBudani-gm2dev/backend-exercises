@@ -1,12 +1,12 @@
-import winston from "winston"
+import winston from 'winston';
 
 const logger = winston.createLogger({
-    level: "debug",
-    format: winston.format.json(),
-    transports : [
-        new winston.transports.Console(),
-        new winston.transports.File({filename: ".log", level: "warn"})
-    ]
-})
+  level: 'debug',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: '.log', level: 'warn' }),
+  ],
+});
 
-export default logger
+export default logger;

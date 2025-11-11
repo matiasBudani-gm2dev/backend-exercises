@@ -1,61 +1,80 @@
 import express from 'express';
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import "dotenv/config"
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import 'dotenv/config';
 
 import { createNewUser, getUserbyEmail } from '../service/userService.js';
 import { getRoleByName } from '../service/RolesService.js';
-import { createNewUserRole, getAllRolesFromUser } from '../service/UsersRolesService.js'; 
-import { authorizeRoles, authenticateToken } from '../middleware/authentication.js';
+import {
+  createNewUserRole,
+  getAllRolesFromUser,
+} from '../service/UsersRolesService.js';
+import {
+  authorizeRoles,
+  authenticateToken,
+} from '../middleware/authentication.js';
 import { createUserSchema, getUserSchema } from '../schemas/userSchemas.js';
 import { loginSchema } from '../schemas/authSchemas.js';
 import { schemaReqValidation } from '../middleware/validation.js';
 
-
 const authRouter = express.Router();
 
-const requiredFields = ["user_name", "password"]
+const requiredFields = ['user_name', 'password'];
 
-authRouter.post("/register", schemaReqValidation(createUserSchema), async(req, res, next)=>{
-    try{
-        const{ user_name, email, password} = req.body
-        const passwordHash = await bcrypt.hash(password, 10)
-        
-        const roleUser = await getRoleByName("user")
+authRouter.post(
+  '/register',
+  schemaReqValidation(createUserSchema),
+  async (req, res, next) => {
+    try {
+      const { user_name, email, password } = req.body;
+      const passwordHash = await bcrypt.hash(password, 10);
 
-        const newUser = await createNewUser({user_name, email, passwordHash })
-        
-        const user_id = newUser.userId
-        const role_id = roleUser.roleId
+      const roleUser = await getRoleByName('user');
 
-        await createNewUserRole({user_id, role_id})
+      const newUser = await createNewUser({ user_name, email, passwordHash });
 
-        res.status(201).send(newUser)
-    }catch(err){
-        next(err)
+      const user_id = newUser.userId;
+      const role_id = roleUser.roleId;
+
+      await createNewUserRole({ user_id, role_id });
+
+      res.status(201).send(newUser);
+    } catch (err) {
+      next(err);
     }
-})
+  }
+);
 
-authRouter.post("/login", schemaReqValidation(loginSchema) ,async(req, res, next)=>{
-    const {email, password} = req.body
-    const user = await getUserbyEmail(email)
-    
-    const passwordOk = await bcrypt.compare(password, user.password)
+authRouter.post(
+  '/login',
+  schemaReqValidation(loginSchema),
+  async (req, res, next) => {
+    const { email, password } = req.body;
+    const user = await getUserbyEmail(email);
 
-    if (!passwordOk) return res.status(400).send("Credenciales invalidas")
+    const passwordOk = await bcrypt.compare(password, user.password);
 
-    const userWithRoles = await getAllRolesFromUser(user.userId)
+    if (!passwordOk) return res.status(400).send('Credenciales invalidas');
 
-    const token = jwt.sign(userWithRoles, process.env.JWT_SECRET, {expiresIn: "1h"})
+    const userWithRoles = await getAllRolesFromUser(user.userId);
 
-    const accessToken = {accessToken : token}
+    const token = jwt.sign(userWithRoles, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
 
-    res.status(200).send(accessToken)
-})
+    const accessToken = { accessToken: token };
 
+    res.status(200).send(accessToken);
+  }
+);
 
-authRouter.get("/admin/dashboard", authenticateToken, authorizeRoles(["admin"]), (req, res, next)=>{
-    res.json("Entras al admin dashboard")
-})
+authRouter.get(
+  '/admin/dashboard',
+  authenticateToken,
+  authorizeRoles(['admin']),
+  (req, res, next) => {
+    res.json('Entras al admin dashboard');
+  }
+);
 
-export default authRouter
+export default authRouter;
