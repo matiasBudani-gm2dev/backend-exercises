@@ -31,6 +31,11 @@ const Players = sequelize.define(
     number: {
       type: DataTypes.INTEGER,
     },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   },
   {
     tableName: "players",

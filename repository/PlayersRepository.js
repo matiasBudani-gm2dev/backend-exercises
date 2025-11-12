@@ -27,5 +27,10 @@ export async function updatePlayer(id, newPlayerData) {
 }
 
 export async function deletePlayerById(id) {
-  await baseRepository.destroy(Players, playersTable.tablePK, id);
+  await baseRepository.update(
+    Players,
+    { deleted: true },
+    playersTable.tablePK,
+    id,
+  );
 }

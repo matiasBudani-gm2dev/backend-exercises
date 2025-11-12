@@ -105,11 +105,9 @@ export async function deletePlayer(id) {
     throw createError(400, "Bad request", "The id has to be a number");
   }
 
-  const player = await getPlayerById(id);
-
-  console.log("\n\n\nsadaasldjnasldnja\n\n\n\n");
-
   await deletePlayerById(id);
+
+  const player = await getPlayerById(id);
 
   return player;
 }

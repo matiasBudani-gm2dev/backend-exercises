@@ -20,7 +20,6 @@ import {
 
 playersRouter.get("/", async (req, res, next) => {
   try {
-    console.log("hola amigo entre aca jaja xd");
     const players = await getAllPlayersInfo();
     res.status(200).send(players);
   } catch (err) {
