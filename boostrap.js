@@ -20,10 +20,10 @@ import { Sequelize } from "sequelize";
 const sequelize = new Sequelize(
   process.env.MYSQL_DATABASE,
   process.env.MYSQL_USER,
-  process.env.PASSWORD,
+  process.env.MYQSL_PASSOWRD,
   {
-    host: process.env.HOST,
-    port: process.env.DB_PORT,
+    host: process.env.MYQSL_HOST,
+    port: process.env.MYSQL_PORT,
     dialect: "mysql",
   },
 );
