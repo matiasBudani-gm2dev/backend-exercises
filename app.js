@@ -5,7 +5,6 @@ import roleRouter from "./routes/RoleRoutes.js";
 import userRolesRouter from "./routes/UsersRolesRoutes.js";
 import authRouter from "./routes/AuthRoutes.js";
 import playersRouter from "./routes/playerRoutes.js";
-import teamsRoutes from "./routes/TeamsRoutes.js";
 import { errorHandling } from "./middleware/errorHandler.js";
 
 export function createApp() {
@@ -58,8 +57,6 @@ export function createApp() {
   app.use("/auth", authRouter);
 
   app.use("/players", playersRouter);
-
-  app.use("/teams", teamsRoutes);
 
   app.use(errorHandling);
 
