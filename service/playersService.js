@@ -9,8 +9,8 @@ import {
   deletePlayerById,
 } from "../repository/PlayersRepository.js";
 
-export async function getAllPlayersInfo() {
-  const playersResult = await findAllPlayers();
+export async function getAllPlayersInfo(deleted) {
+  const playersResult = await findAllPlayers(deleted);
   const players = [];
   playersResult.forEach((player) => {
     players.push(player.dataValues);
@@ -106,8 +106,6 @@ export async function deletePlayer(id) {
   }
 
   await deletePlayerById(id);
-
-  const player = await getPlayerById(id);
 
   return player;
 }

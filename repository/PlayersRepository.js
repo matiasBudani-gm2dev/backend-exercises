@@ -6,8 +6,8 @@ const playersTable = {
   tablePK: "player_id",
 };
 
-export async function findAllPlayers() {
-  return baseRepository.findAll(Players);
+export async function findAllPlayers(deleted) {
+  return baseRepository.findAll(Players, deleted);
 }
 
 export async function findPlayerById(id) {
