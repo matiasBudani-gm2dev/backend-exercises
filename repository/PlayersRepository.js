@@ -1,5 +1,5 @@
 import baseRepository from "./BaseRepository.js";
-import Players from "../models/playerModel.js";
+import Players from "../models/PlayerModel.js";
 
 const playersTable = {
   tableName: "players",

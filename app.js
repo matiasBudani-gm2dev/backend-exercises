@@ -23,7 +23,31 @@ export function createApp() {
 
   app.use(express.json());
 
-  app.use(cors());
+  const allowedOrigins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",
+    "http://192.168.0.15:3000", // si lo usan en red local
+  ];
+
+  app.use(
+    cors({
+      origin: function (origin, callback) {
+        // Permitir herramientas sin origin (Postman, curl, etc.)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error(`Origen no permitido por CORS: ${origin}`));
+        }
+      },
+      credentials: true,
+    }),
+  );
+
+  // Resto de tu API
+  app.get("/", (req, res) => res.json({ ok: true }));
 
   app.use("/users", userRouter);
 

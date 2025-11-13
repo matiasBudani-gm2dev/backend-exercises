@@ -28,19 +28,14 @@ import {
   authorizeRoles,
 } from "../middleware/authentication.js";
 
-userRouter.get(
-  "/",
-  authenticateToken,
-  authorizeRoles(["user", "admin"]),
-  async (req, res, next) => {
-    try {
-      const users = await getAllUsersInfo();
-      res.status(200).send(users);
-    } catch (error) {
-      next(error);
-    }
-  },
-);
+userRouter.get("/", async (req, res, next) => {
+  try {
+    const users = await getAllUsersInfo();
+    res.status(200).send(users);
+  } catch (error) {
+    next(error);
+  }
+});
 
 userRouter.get(
   "/:id",
