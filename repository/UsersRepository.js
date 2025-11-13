@@ -28,5 +28,4 @@ export async function updateUserById(id, newUserData) {
 
 export async function deleteUserById(id) {
   await baseRepository.destroy(Users, usersTable.tablePK, id);
-  //deleteById(id, usersTable.tableName, usersTable.tablePK)
 }
