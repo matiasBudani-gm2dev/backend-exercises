@@ -17,7 +17,7 @@ const Players = sequelize.define(
     },
     nick: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       unique: true,
     },
     rating: {
