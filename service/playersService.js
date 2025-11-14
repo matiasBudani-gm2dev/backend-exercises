@@ -106,6 +106,4 @@ export async function deletePlayer(id) {
   }
 
   await deletePlayerById(id);
-
-  return player;
 }

@@ -110,7 +110,7 @@ playersRouter.delete("/:id", async (req, res, next) => {
     const id = Number(req.params.id);
     await deletePlayer(id);
 
-    res.status(204);
+    res.sendStatus(204);
   } catch (err) {
     next(err);
   }

@@ -29,7 +29,7 @@ export async function updatePlayer(id, newPlayerData) {
 export async function deletePlayerById(id) {
   await baseRepository.update(
     Players,
-    { deleted: true },
+    { deleted: true, nick: null },
     playersTable.tablePK,
     id,
   );
