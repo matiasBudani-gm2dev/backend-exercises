@@ -20,7 +20,9 @@ import {
 
 playersRouter.get("/", async (req, res, next) => {
   try {
-    const players = await getAllPlayersInfo();
+    const { deleted } = req.query;
+    console.log("deleted", deleted);
+    const players = await getAllPlayersInfo(deleted);
     res.status(200).send(players);
   } catch (err) {
     next(err);
@@ -106,9 +108,9 @@ playersRouter.patch(
 playersRouter.delete("/:id", async (req, res, next) => {
   try {
     const id = Number(req.params.id);
-    const player = await deletePlayer(id);
+    await deletePlayer(id);
 
-    res.status(200).send(player);
+    res.sendStatus(204);
   } catch (err) {
     next(err);
   }

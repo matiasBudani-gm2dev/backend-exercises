@@ -1,10 +1,7 @@
 import Roles from "../models/RoleModel.js";
 import baseRepository from "./BaseRepository.js";
 
-const rolesTable = {
-  tableName: "roles",
-  tablePK: "roleId",
-};
+const tablePK = "roleId";
 
 export async function findAllRoles() {
   return baseRepository.findAll(Roles);
@@ -23,9 +20,9 @@ export async function saveRole(role) {
 }
 
 export async function updateRoleById(id, newRoleData) {
-  await baseRepository.update(Roles, newRoleData, rolesTable.tablePK, id);
+  await baseRepository.update(Roles, newRoleData, tablePK, id);
 }
 
 export async function deleteRoleById(id) {
-  await baseRepository.destroy(Roles, rolesTable.tablePK, id);
+  await baseRepository.destroy(Roles, tablePK, id);
 }
