@@ -7,7 +7,13 @@ const playersTable = {
 };
 
 export async function findAllPlayers(deleted) {
-  return baseRepository.findAll(Players, deleted);
+  const where = {};
+
+  if (deleted !== undefined) {
+    where.deleted = deleted;
+  }
+
+  return baseRepository.findAll(Players, where);
 }
 
 export async function findPlayerById(id) {
