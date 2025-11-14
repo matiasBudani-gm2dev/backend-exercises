@@ -6,8 +6,8 @@ const playersTable = {
   tablePK: "player_id",
 };
 
-export async function findAllPlayers() {
-  return baseRepository.findAll(Players);
+export async function findAllPlayers(deleted) {
+  return baseRepository.findAll(Players, deleted);
 }
 
 export async function findPlayerById(id) {
@@ -29,7 +29,7 @@ export async function updatePlayer(id, newPlayerData) {
 export async function deletePlayerById(id) {
   await baseRepository.update(
     Players,
-    { deleted: true },
+    { deleted: true, nick: null },
     playersTable.tablePK,
     id,
   );
