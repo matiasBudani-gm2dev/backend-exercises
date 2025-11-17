@@ -27,13 +27,13 @@ export function createApp() {
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:5173",
-    "http://192.168.0.15:3000", // si lo usan en red local
+    "http://192.168.0.15:3000",
+    "https://final-tp-soccer-app-production.up.railway.app/",
   ];
 
   app.use(
     cors({
       origin: function (origin, callback) {
-        // Permitir herramientas sin origin (Postman, curl, etc.)
         if (!origin) return callback(null, true);
 
         if (allowedOrigins.includes(origin)) {
@@ -46,7 +46,6 @@ export function createApp() {
     }),
   );
 
-  // Resto de tu API
   app.get("/", (req, res) => res.json({ ok: true }));
 
   app.use("/users", userRouter);
