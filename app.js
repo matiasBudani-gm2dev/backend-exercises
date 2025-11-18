@@ -28,7 +28,6 @@ export function createApp() {
   app.use(
     cors({
       origin: function (origin, callback) {
-        // Permitir herramientas sin origin (Postman, curl, etc.)
         if (!origin) return callback(null, true);
 
         if (allowedOrigins.includes(origin)) {
@@ -41,7 +40,6 @@ export function createApp() {
     }),
   );
 
-  // Resto de tu API
   app.get("/", (req, res) => res.json({ ok: true }));
 
   app.use("/users", userRouter);
