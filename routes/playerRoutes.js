@@ -20,16 +20,7 @@ import {
 
 playersRouter.get("/", async (req, res, next) => {
   try {
-    let { deleted } = req.query;
-
-    if (deleted !== undefined) {
-      if (deleted === "true") deleted = true;
-      else if (deleted === "false") deleted = false;
-      else if (deleted === "all") deleted = undefined;
-      else return res.status(400).send({ error: "Invalid deleted value" });
-    } else {
-      deleted = false;
-    }
+    const deleted = false;
 
     const players = await getAllPlayersInfo(deleted);
     res.status(200).send(players);
