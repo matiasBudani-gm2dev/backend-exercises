@@ -26,6 +26,8 @@ playersRouter.get("/", async (req, res, next) => {
       if (deleted === "true") deleted = true;
       else if (deleted === "false") deleted = false;
       else return res.status(400).send({ error: "Invalid deleted value" });
+    } else {
+      deleted = false;
     }
 
     const players = await getAllPlayersInfo(deleted);
