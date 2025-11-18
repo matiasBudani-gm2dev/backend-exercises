@@ -26,7 +26,6 @@ export async function getUserWithRoles(userId) {
   const user = await getUserById(userId);
 
   const roles = await findAllRolesFromUser(userId);
-
   const userWithRoles = { ...user, roles };
 
   return userWithRoles;
@@ -98,8 +97,6 @@ export async function createNewUserRole(userRoleData) {
   if (!newUserRole) {
     throw createError(500, "Internal server error", "User role not created");
   }
-
-  console.log("holaaaaa");
 
   const usersRoles = await getAllUsersRoles();
 

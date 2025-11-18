@@ -1,6 +1,7 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
 import "dotenv/config";
 
 import { createNewUser, getUserbyEmail } from "../service/userService.js";
@@ -13,7 +14,8 @@ import {
   authorizeRoles,
   authenticateToken,
 } from "../middleware/authentication.js";
-import { createUserSchema, getUserSchema } from "../schemas/userSchemas.js";
+import { createUserSchema } from "../schemas/userSchemas.js";
+import { generateCodeForUser } from "../service/verificationCodesService.js";
 import { loginSchema } from "../schemas/authSchemas.js";
 import { schemaReqValidation } from "../middleware/validation.js";
 
@@ -37,6 +39,8 @@ authRouter.post(
       const role_id = roleUser.roleId;
 
       await createNewUserRole({ user_id, role_id });
+
+      await generateCodeForUser(user_id);
 
       res.status(201).send(newUser);
     } catch (err) {
