@@ -7,6 +7,10 @@ export async function findAllMatches() {
   return baseRepository.findAll(Matches);
 }
 
+export async function findMatchById(matchId) {
+  return baseRepository.findByPk(Matches, matchId);
+}
+
 export async function findTeamById(teamId) {
   return baseRepository.findByPk(Teams, teamId);
 }
