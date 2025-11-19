@@ -2,7 +2,9 @@ import express from "express";
 
 const matchesRouter = express.Router();
 
-matchesRouter.get("/", async (req, res, next) => {
+import { getAllMatches } from "../service/MatchesService.js";
+
+matchesRouter.get("/finalMatch", async (req, res, next) => {
   try {
     const matches = [
       {
@@ -41,6 +43,16 @@ matchesRouter.get("/", async (req, res, next) => {
         status: ["finished", "pending", "ongoing"],
       },
     ];
+    res.status(200).send(matches);
+  } catch (err) {
+    next(err);
+  }
+});
+
+matchesRouter.get("/", async (req, res, next) => {
+  try {
+    const matches = await getAllMatches();
+
     res.status(200).send(matches);
   } catch (err) {
     next(err);
