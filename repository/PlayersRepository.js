@@ -13,7 +13,9 @@ export async function findAllPlayers(deleted) {
     where.deleted = deleted;
   }
 
-  return baseRepository.findAll(Players, where);
+  const order = [["player_id", "DESC"]];
+
+  return baseRepository.findAll(Players, where, order);
 }
 
 export async function findPlayerById(id) {

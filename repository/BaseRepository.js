@@ -1,9 +1,8 @@
 import logger from "../winstonLogs.js";
 
 const baseRepository = {
-  findAll: async (paramTable, where = {}) => {
-    console.log({ where });
-    return await paramTable.findAll({ where });
+  findAll: async (paramTable, where = {}, order = []) => {
+    return await paramTable.findAll({ where, order });
   },
   findByPk: async (paramTable, pk) => await paramTable.findByPk(pk),
   findOne: async (paramTable, filters) =>
