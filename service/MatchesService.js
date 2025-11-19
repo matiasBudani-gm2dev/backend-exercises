@@ -159,8 +159,8 @@ export async function getMatchById(matchId) {
 
   awayTeam.players = awayPlayers;
 
-  match.dataValues.homeTeam = homeTeam;
-  match.dataValues.awayTeam = awayTeam;
+  match.homeTeam = homeTeam;
+  match.awayTeam = awayTeam;
 
   const score = {
     home: match.home_team_score,
@@ -173,7 +173,7 @@ export async function getMatchById(matchId) {
     home_team_id,
     away_team_id,
     ...matchData
-  } = match.dataValues;
+  } = match;
 
   return {
     ...matchData,
