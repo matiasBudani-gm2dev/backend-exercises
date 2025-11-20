@@ -2,7 +2,11 @@ import express from "express";
 
 const matchesRouter = express.Router();
 
-import { getAllMatches, getMatchById } from "../service/MatchesService.js";
+import {
+  getAllMatches,
+  getMatchById,
+  createMatch,
+} from "../service/MatchesService.js";
 
 matchesRouter.get("/", async (req, res, next) => {
   try {
@@ -23,4 +27,13 @@ matchesRouter.get("/:id", async (req, res, next) => {
   }
 });
 
+matchesRouter.post("/", async (req, res, next) => {
+  try {
+    const matchData = req.body;
+    await createMatch(matchData);
+    res.sendStatus(201);
+  } catch (err) {
+    next(err);
+  }
+});
 export default matchesRouter;
