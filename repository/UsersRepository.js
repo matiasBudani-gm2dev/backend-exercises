@@ -15,7 +15,7 @@ export async function findUserById(id) {
 }
 
 export async function findByEmail(email) {
-  return baseRepository.findOne(Users, email);
+  return baseRepository.findOne(Users, { email });
 }
 
 export async function saveUser(user) {

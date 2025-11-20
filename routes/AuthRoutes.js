@@ -15,9 +15,10 @@ import {
   authenticateToken,
 } from "../middleware/authentication.js";
 import { createUserSchema } from "../schemas/userSchemas.js";
-import { generateCodeForUser } from "../service/verificationCodesService.js";
 import { loginSchema, verifyUserSchema } from "../schemas/authSchemas.js";
 import { schemaReqValidation } from "../middleware/validation.js";
+import VerificationCodes from "../models/VerificationCodes.js";
+import { verifyCodeForUser } from "../service/verificationCodesService.js";
 
 const authRouter = express.Router();
 
@@ -54,10 +55,8 @@ authRouter.post(
   schemaReqValidation(verifyUserSchema),
   async (req, res, next) => {
     const { email, code } = req.body;
-    // ... verify
-    // SELECT * FROM users where email = 'EMAIL'
-    //SELECT * FROM verification_codes where user_id = 10 and code = '123456' and expired_at > NOW();
-    // UPDATE users SET is_verified = true where user_id = ???
+    const result = await verifyCodeForUser(email, code);
+    res.status(200);
   },
 );
 

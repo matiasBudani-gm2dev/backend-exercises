@@ -1,41 +1,54 @@
-import { VerificationCodes } from "../models/index.js";
+import { VerificationCodes, Users } from "../models/index.js";
 import { createError } from "../utils/createError.js";
 import { createCode } from "../repository/VerificationCodesRepository.js";
-import { getUserById } from "./userService.js";
+import { getUserbyEmail } from "./userService.js";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function generateCodeForUser(userId) {
-  const user = await getUserById(userId);
+export async function verifyCodeForUser(email, code) {
+  console.log("1) Buscando usuario...");
+  console.log("Email recibido:", JSON.stringify(email));
+  console.log("Tipo:", typeof email);
 
-  if (!user) throw createError(404, "Not found", "User not Found");
-  if (user.is_verified)
-    throw createError(
-      409,
-      "Usuario verificado",
-      "El usuario ya está verificado.",
-    );
+  const user = await getUserbyEmail(email);
+  console.log("USER ENCONTRADO:", user);
 
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
-  const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos desde ahora
+  if (!user) throw createError(404, "Usuario no encontrado");
 
-  const codeData = {
-    user_id: userId,
-    code: code,
-    expires_at: expiresAt,
-  };
+  if (user.is_verified) throw createError(409, "Usuario ya verificado");
 
-  await createCode(codeData);
-
-  await resend.emails.send({
-    from: process.env.EMAIL_FROM,
-    to: [user.email],
-    subject: "Código de verificación",
-    html: `<h1>Este es tu código de verificación</h1>
-      <h2>${code}</h2>
-      <p>Tu codigo vence en 15 minutos.</p>`,
+  console.log("2) Buscando código...");
+  const verification = await VerificationCodes.findOne({
+    where: {
+      user_id: user.userId,
+      code,
+      used: false,
+    },
   });
-}
 
-// return {message: "tiktaktiktaktiktaktiktak", expires_at}
+  console.log("VERIFICATION:", verification?.toJSON?.());
+
+  if (!verification) throw createError(400, "Código incorrecto");
+
+  if (verification.expires_at < new Date())
+    throw createError(400, "El código expiró");
+
+  console.log("3) Actualizando usuario...");
+  const updatedUser = await Users.update(
+    { is_verified: true },
+    { where: { userId: user.userId } },
+  );
+  console.log("UPDATE USER RESULT:", updatedUser);
+
+  console.log("4) Marcando código como usado...");
+  const updatedCode = await VerificationCodes.update(
+    { used: true },
+    { where: { id: verification.id } },
+  );
+  console.log("UPDATE CODE RESULT:", updatedCode);
+
+  console.log("5) FIN.");
+
+  return { message: "Usuario verificado correctamente" };
+}

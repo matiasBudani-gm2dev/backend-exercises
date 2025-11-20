@@ -7,5 +7,5 @@ export const loginSchema = Joi.object({
 
 export const verifyUserSchema = Joi.object({
   email: Joi.string().email().required(),
-  code: Joi.string().email().required(),
+  code: Joi.string().length(6).pattern(/^\d+$/).required(),
 });

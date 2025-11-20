@@ -5,11 +5,14 @@ const baseRepository = {
     console.log({ where });
     return await paramTable.findAll({ where });
   },
-  findByPk: async (paramTable, pk) => await paramTable.findByPk(pk),
-  findOne: async (paramTable, filters) =>
-    await paramTable.findOne({
-      where: filters,
-    }),
+  findByPk: async (paramTable, pk) => {
+    const row = await paramTable.findByPk(pk);
+    return row ? row.dataValues : null;
+  },
+  findOne: async (paramTable, filters) => {
+    const row = await paramTable.findOne({ where: filters });
+    return row ? row.dataValues : null;
+  },
   findWithJoin: async (
     LeftModel,
     RightModel,

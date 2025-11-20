@@ -48,9 +48,7 @@ export async function getUserById(id) {
 }
 
 export async function getUserbyEmail(email) {
-  const emailFilter = { email: email };
-
-  const userResult = await findByEmail(emailFilter);
+  const userResult = await findByEmail(email);
 
   if (!userResult) {
     throw createError(404, "Not found", "User not Found");
