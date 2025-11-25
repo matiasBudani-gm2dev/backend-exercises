@@ -18,8 +18,8 @@ export async function findAllPlayers(deleted) {
   return baseRepository.findAll(Players, where, order);
 }
 
-export async function findPlayerById(id) {
-  return baseRepository.findByPk(Players, id);
+export async function findPlayerById(id, options = {}) {
+  return baseRepository.findByPk(Players, id, options);
 }
 
 export async function findPlayerByNick(nick) {

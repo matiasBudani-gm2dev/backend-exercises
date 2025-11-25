@@ -1,19 +1,25 @@
 import logger from "../winstonLogs.js";
 
 const baseRepository = {
-  findAll: async (paramTable, where = {}, order = []) => {
-    return await paramTable.findAll({ where, order });
+  findAll: async (paramTable, where = {}, options = {}) => {
+    return await paramTable.findAll({ where, ...options });
   },
-  findByPk: async (paramTable, pk) => await paramTable.findByPk(pk),
-  findOne: async (paramTable, filters) =>
+
+  findByPk: async (paramTable, pk, options = {}) =>
+    await paramTable.findByPk(pk, options),
+
+  findOne: async (paramTable, filters, options = {}) =>
     await paramTable.findOne({
       where: filters,
+      ...options,
     }),
+
   findWithJoin: async (
     LeftModel,
     RightModel,
     rightModelKey,
     rightModelKeyValue,
+    options = {},
   ) => {
     try {
       const rows = await LeftModel.findAll({
@@ -22,34 +28,36 @@ const baseRepository = {
           where: { [rightModelKey]: rightModelKeyValue },
           attributes: [],
         },
+        ...options,
       });
 
-      const plainRows = rows.map((r) => r.get({ plain: true }));
-
-      return plainRows;
+      return rows.map((r) => r.get({ plain: true }));
     } catch (err) {
       logger.error(err);
       throw err;
     }
   },
-  create: async (paramTable, data) => paramTable.create(data),
-  update: async (paramTable, newData, idKey, idValue) => {
+
+  create: async (paramTable, data, options = {}) =>
+    await paramTable.create(data, options),
+
+  update: async (paramTable, newData, idKey, idValue, options = {}) => {
     try {
       await paramTable.update(newData, {
-        where: {
-          [idKey]: idValue,
-        },
+        where: { [idKey]: idValue },
+        ...options,
       });
     } catch (err) {
       logger.error(err);
+      throw err;
     }
   },
-  destroy: async (paramTable, idKey, idValue) => {
+
+  destroy: async (paramTable, idKey, idValue, options = {}) =>
     await paramTable.destroy({
-      where: {
-        [idKey]: idValue,
-      },
-    });
-  },
+      where: { [idKey]: idValue },
+      ...options,
+    }),
 };
+
 export default baseRepository;

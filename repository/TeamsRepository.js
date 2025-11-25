@@ -13,8 +13,8 @@ export async function findTeamById(id) {
   return baseRepository.findByPk(Teams, id);
 }
 
-export async function saveTeam(team) {
-  return baseRepository.create(Teams, team);
+export async function saveTeam(team, options = {}) {
+  return baseRepository.create(Teams, team, options);
 }
 
 export async function updateTeamById(id, newTeamData) {

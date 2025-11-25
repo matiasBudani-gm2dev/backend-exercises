@@ -35,16 +35,19 @@ const Matches = sequelize.define(
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM("finished", "in progress", "pending"),
+      type: DataTypes.ENUM("finished", "in progress", "pending", "cancelled"),
       allowNull: false,
+      defaultValue: "pending",
     },
     home_team_score: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
     away_team_score: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
   },
   {

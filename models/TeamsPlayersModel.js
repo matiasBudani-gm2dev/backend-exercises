@@ -33,6 +33,7 @@ const TeamsPlayers = sequelize.define(
     number: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      defaultValue: null,
     },
   },
   { tableName: "teams_players", timestamps: false },

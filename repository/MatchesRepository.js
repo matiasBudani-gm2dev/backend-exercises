@@ -20,3 +20,11 @@ export async function findTeamPlayersById(teamId) {
 
   return baseRepository.findAll(TeamsPlayers, where);
 }
+
+export async function saveMatch(matchData, options = {}) {
+  return baseRepository.create(Matches, matchData, options);
+}
+
+export async function updateMatch(matchId, matchData, options = {}) {
+  return baseRepository.update(Matches, matchData);
+}

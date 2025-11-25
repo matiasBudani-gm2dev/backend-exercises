@@ -1,12 +1,17 @@
 import { createError } from "../utils/createError.js";
 
+import { sequelize } from "../boostrap.js";
+
 import {
   findAllMatches,
   findMatchById,
   findTeamById,
   findTeamPlayersById,
+  saveMatch,
 } from "../repository/MatchesRepository.js";
 
+import { saveTeam } from "../repository/TeamsRepository.js";
+import { saveTeamPlayer } from "../repository/TeamsPlayersRepository.js";
 import { getPlayerById } from "./playersService.js";
 
 export async function getAllMatches() {
@@ -92,9 +97,6 @@ export async function getAllMatches() {
     }),
   );
 
-  console.log("FINAL MATCHES:");
-  console.log(matches);
-
   return matches;
 }
 
@@ -103,12 +105,8 @@ export async function getMatchById(matchId) {
 
   const match = matchesResult.dataValues;
 
-  if (!matchesResult) {
-    throw createError(
-      500,
-      "Internal server error",
-      "Error connecting to database",
-    );
+  if (!match) {
+    throw createError(404, "Not found ", "Match was not found");
   }
 
   const homeTeam = {};
@@ -181,4 +179,76 @@ export async function getMatchById(matchId) {
     awayTeam,
     score,
   };
+}
+
+export async function createMatch(matchData) {
+  const homeTeamName = { name: matchData.homeTeam.name };
+  const awayTeamName = { name: matchData.awayTeam.name };
+
+  await sequelize.transaction(async (t) => {
+    console.log("asjdaiosu");
+    const homeTeam = (await saveTeam(homeTeamName, { transaction: t }))
+      .dataValues;
+    const awayTeam = (await saveTeam(awayTeamName, { transaction: t }))
+      .dataValues;
+
+    const homePlayersIds = matchData.homeTeam.playersIds;
+    const awayPlayersIds = matchData.awayTeam.playersIds;
+
+    await Promise.all(
+      homePlayersIds.map(async (playerId) => {
+        const player = await getPlayerById(playerId, { transaction: t });
+
+        if (!player) {
+          throw createError(
+            404,
+            "Not found",
+            `Player ID ${playerId} not found`,
+          );
+        }
+        await saveTeamPlayer(
+          { team_id: homeTeam.team_id, player_id: playerId },
+          { transaction: t },
+        );
+      }),
+    );
+
+    await Promise.all(
+      awayPlayersIds.map(async (playerId) => {
+        const player = await getPlayerById(playerId, { transaction: t });
+
+        if (!player) {
+          throw createError(
+            404,
+            "Not found",
+            `Player ID ${playerId} not found`,
+          );
+        }
+        await saveTeamPlayer(
+          { team_id: awayTeam.team_id, player_id: playerId },
+          { transaction: t },
+        );
+      }),
+    );
+
+    const matchRecord = {
+      name: matchData.name,
+      location: matchData.location,
+      playerPerTeam: matchData.playerPerTeam,
+      match_date: matchData.match_date,
+      home_team_id: homeTeam.team_id,
+      away_team_id: awayTeam.team_id,
+    };
+    await saveMatch(matchRecord, { transaction: t });
+  });
+}
+
+export async function updateMatch(matchId, matchData) {
+  const matchesResult = await findMatchById(matchId);
+
+  const match = matchesResult.dataValues;
+
+  if (!match) {
+    throw createError(404, "Not found ", "Match was not found");
+  }
 }
