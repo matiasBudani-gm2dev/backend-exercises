@@ -24,3 +24,7 @@ export async function findTeamPlayersById(teamId) {
 export async function saveMatch(matchData, options = {}) {
   return baseRepository.create(Matches, matchData, options);
 }
+
+export async function updateMatch(matchId, matchData, options = {}) {
+  return baseRepository.update(Matches, matchData);
+}

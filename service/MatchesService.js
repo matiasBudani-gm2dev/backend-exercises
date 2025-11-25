@@ -105,12 +105,8 @@ export async function getMatchById(matchId) {
 
   const match = matchesResult.dataValues;
 
-  if (!matchesResult) {
-    throw createError(
-      500,
-      "Internal server error",
-      "Error connecting to database",
-    );
+  if (!match) {
+    throw createError(404, "Not found ", "Match was not found");
   }
 
   const homeTeam = {};
@@ -245,4 +241,14 @@ export async function createMatch(matchData) {
     };
     await saveMatch(matchRecord, { transaction: t });
   });
+}
+
+export async function updateMatch(matchId, matchData) {
+  const matchesResult = await findMatchById(matchId);
+
+  const match = matchesResult.dataValues;
+
+  if (!match) {
+    throw createError(404, "Not found ", "Match was not found");
+  }
 }
