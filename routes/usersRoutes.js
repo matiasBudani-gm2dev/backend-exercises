@@ -39,8 +39,6 @@ userRouter.get("/", async (req, res, next) => {
 
 userRouter.get(
   "/:id",
-  authenticateToken,
-  authorizeRoles(["user", "admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -54,8 +52,6 @@ userRouter.get(
 
 userRouter.get(
   "/:id",
-  authenticateToken,
-  authorizeRoles(["user", "admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -70,7 +66,6 @@ userRouter.get(
 userRouter.post(
   "/",
   schemaReqValidation(createUserSchema),
-  authenticateToken,
   authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
@@ -88,7 +83,6 @@ userRouter.post(
 userRouter.put(
   "/:id",
   schemaReqValidation(updateCompleteUserSchema),
-  authenticateToken,
   authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
@@ -106,7 +100,6 @@ userRouter.put(
 userRouter.patch(
   "/:id",
   schemaReqValidation(updatePartialUserSchema),
-  authenticateToken,
   authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
@@ -124,7 +117,6 @@ userRouter.patch(
 
 userRouter.delete(
   "/:id",
-  authenticateToken,
   authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {

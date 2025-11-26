@@ -24,15 +24,9 @@ import {
   schemaResValidation,
 } from "../middleware/validation.js";
 
-import {
-  authenticateToken,
-  authorizeRoles,
-} from "../middleware/authentication.js";
 
 userRolesRouter.get(
   "/",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const usersRoles = await getAllUsersRoles();
@@ -48,8 +42,6 @@ userRolesRouter.get(
 
 userRolesRouter.get(
   "/:id",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   schemaReqValidation(roleIdSchema),
   async (req, res, next) => {
     try {
@@ -72,8 +64,6 @@ userRolesRouter.get(
 
 userRolesRouter.get(
   "/users/:id",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -95,8 +85,6 @@ userRolesRouter.get(
 
 userRolesRouter.get(
   "/roles/:id",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -120,8 +108,6 @@ userRolesRouter.get(
 
 userRolesRouter.post(
   "/:id",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   schemaReqValidation(roleIdSchema),
   async (req, res, next) => {
     try {
@@ -145,8 +131,6 @@ userRolesRouter.post(
 
 userRolesRouter.put(
   "/:id",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   schemaReqValidation(rolesIdArraySchema),
   async (req, res, next) => {
     try {
@@ -170,8 +154,6 @@ userRolesRouter.put(
 
 userRolesRouter.delete(
   "/:id",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   async (req, res, next) => {
     const user_id = Number(req.params.id);
     const user = await updateNewUserRoles({ roles_ids: [], user_id });
