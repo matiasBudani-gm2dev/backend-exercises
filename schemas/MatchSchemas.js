@@ -24,7 +24,7 @@ const matchSchema = Joi.object({
 });
 
 const createMatchSchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.string(),
   location: Joi.string().required(),
   playerPerTeam: Joi.number().integer().min(1).required(),
   match_date: Joi.date().iso().required(),
@@ -74,20 +74,5 @@ const updateMatchSchema = Joi.object({
       .optional(),
   }).optional(),
 });
-
-const matchToCreate = {
-  name: "La batalla campal",
-  location: "Cancha de Chicago",
-  playerPerTeam: 5,
-  match_date: "2025-11-18T11:30:00.000Z",
-  homeTeam: {
-    name: "TeamA",
-    playersIds: [1, 2, 3, 4, 5],
-  },
-  awayTeam: {
-    name: "TeamA",
-    playersIds: [6, 7, 8, 9, 10],
-  },
-};
 
 export { createMatchSchema };
