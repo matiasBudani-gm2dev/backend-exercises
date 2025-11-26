@@ -9,7 +9,7 @@ import teamsRoutes from "./routes/TeamsRoutes.js";
 import matchesRouter from "./routes/MatchesRoutes.js";
 import { errorHandling } from "./middleware/errorHandler.js";
 
-import {authenticateToken, authorizeRoles} from "../middleware/authentication.js"
+import {authenticateToken, authorizeRoles} from "./middleware/authentication.js"
 
 
 export function createApp() {
