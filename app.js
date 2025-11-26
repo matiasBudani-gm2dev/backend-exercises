@@ -51,7 +51,7 @@ export function createApp() {
 
   app.use("/roles",authenticateToken, authorizeRoles(["admin"]),roleRouter);
 
-  app.use("/users-roles", authorizeRoles(["admin"]), authenticateToken, userRolesRouter);
+  app.use("/users-roles", authenticateToken, authorizeRoles(["admin"]), userRolesRouter);
 
   app.use("/auth", authRouter);
 
