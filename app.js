@@ -7,6 +7,7 @@ import authRouter from "./routes/AuthRoutes.js";
 import playersRouter from "./routes/playerRoutes.js";
 import teamsRoutes from "./routes/TeamsRoutes.js";
 import matchesRouter from "./routes/MatchesRoutes.js";
+import statsRouter from "./routes/StatsRoutes.js";
 import { errorHandling } from "./middleware/errorHandler.js";
 
 export function createApp() {
@@ -14,7 +15,7 @@ export function createApp() {
 
   app.set("view engine", "ejs");
 
-  app.get("/", (req, res) => {
+  app.get("/", (_req, res) => {
     res.json({
       message: "API de usuarios - Ejercicio 2",
       version: "2.0",
@@ -24,25 +25,9 @@ export function createApp() {
 
   app.use(express.json());
 
-  const allowedOrigins = ["*"];
+  app.use(cors());
 
-  app.use(
-    cors(),
-    //   {
-    //   origin: function (origin, callback) {
-    //     if (!origin) return callback(null, true);
-
-    //     if (allowedOrigins.includes(origin)) {
-    //       callback(null, true);
-    //     } else {
-    //       callback(new Error(`Origen no permitido por CORS: ${origin}`));
-    //     }
-    //   },
-    //   credentials: true,
-    // }
-  );
-
-  app.get("/", (req, res) => res.json({ ok: true }));
+  app.get("/", (_req, res) => res.json({ ok: true }));
 
   app.use("/users", userRouter);
 
@@ -57,6 +42,8 @@ export function createApp() {
   app.use("teams", teamsRoutes);
 
   app.use("/matches", matchesRouter);
+
+  app.use("/stats", statsRouter);
 
   app.use(errorHandling);
 

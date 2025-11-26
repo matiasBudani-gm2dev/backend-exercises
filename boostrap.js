@@ -14,4 +14,5 @@ const sequelize = new Sequelize(
     dialect: "mysql",
   },
 );
+
 export { sequelize };
