@@ -53,6 +53,23 @@ const baseRepository = {
     }
   },
 
+  updateWhereKeys: async (
+    paramTable,
+    newData,
+    whereKeys = {},
+    options = {},
+  ) => {
+    try {
+      await paramTable.update(newData, {
+        where: whereKeys,
+        ...options,
+      });
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  },
+
   destroy: async (paramTable, idKey, idValue, options = {}) =>
     await paramTable.destroy({
       where: { [idKey]: idValue },
