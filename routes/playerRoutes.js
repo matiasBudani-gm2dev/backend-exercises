@@ -18,7 +18,12 @@ import {
   updatePartialPlayerSchema,
 } from "../schemas/playerSchemas.js";
 
-playersRouter.get("/", async (req, res, next) => {
+
+import {authenticateToken, authorizeRoles} from "../middleware/authentication.js"
+
+playersRouter.get("/", 
+
+  async (req, res, next) => {
   try {
     const deleted = false;
 
@@ -29,7 +34,8 @@ playersRouter.get("/", async (req, res, next) => {
   }
 });
 
-playersRouter.get("/id/:id", async (req, res, next) => {
+playersRouter.get("/id/:id", 
+  async (req, res, next) => {
   try {
     const id = Number(req.params.id);
 
@@ -40,7 +46,9 @@ playersRouter.get("/id/:id", async (req, res, next) => {
   }
 });
 
-playersRouter.get("/nick/:nick", async (req, res, next) => {
+playersRouter.get("/nick/:nick", 
+  authorizeRoles(["admin"]),
+  async (req, res, next) => {
   try {
     const nick = req.params.nick;
     const player = await getPlayerByNick(nick);
@@ -52,6 +60,7 @@ playersRouter.get("/nick/:nick", async (req, res, next) => {
 
 playersRouter.post(
   "/",
+  authorizeRoles(["admin"]),
   schemaReqValidation(playerSchema),
   async (req, res, next) => {
     try {
@@ -66,6 +75,7 @@ playersRouter.post(
 
 playersRouter.put(
   "/:id",
+  authorizeRoles(["admin"]),
   schemaReqValidation(playerSchema),
   async (req, res, next) => {
     try {
@@ -87,6 +97,7 @@ playersRouter.put(
 
 playersRouter.patch(
   "/:id",
+  authorizeRoles(["admin"]),
   schemaReqValidation(updatePartialPlayerSchema),
   async (req, res, next) => {
     try {
@@ -105,7 +116,9 @@ playersRouter.patch(
   },
 );
 
-playersRouter.delete("/:id", async (req, res, next) => {
+playersRouter.delete("/:id",
+  authorizeRoles(["admin"]),
+  async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     await deletePlayer(id);

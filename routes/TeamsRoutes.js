@@ -3,8 +3,8 @@ import express from "express";
 const teamsRoutes = express.Router();
 
 import { getAllTeams } from "../service/TeamsService.js";
-
-teamsRoutes.get("/", async (req, res, next) => {
+teamsRoutes.get("/", 
+  async (req, res, next) => {
   try {
     const teams = await getAllTeams();
     res.status(200).send(teams);
