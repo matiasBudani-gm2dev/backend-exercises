@@ -1,4 +1,6 @@
 import baseRepository from "./BaseRepository.js";
+import { literal } from "sequelize";
+
 import { Users, Roles, UserRole } from "../models/index.js";
 
 const usersRolesTable = {
@@ -26,7 +28,16 @@ export async function findUserRole(userRoleIds) {
 }
 
 export async function findAllUsersWithSpecificRole(roleId) {
-  return baseRepository.findWithJoin(Users, UserRole, tableRolePK, roleId);
+  return baseRepository.findWithJoin(Users, UserRole, tableRolePK, roleId, {
+    group: ["Users.userId"],
+    having: literal(`
+        (
+          SELECT COUNT(DISTINCT ur2.roleId)
+          FROM \`user_roles\` AS ur2
+          WHERE ur2.userId = Users.userId
+        ) = 1
+      `),
+  });
 }
 
 export async function findAllRolesFromUser(userId) {

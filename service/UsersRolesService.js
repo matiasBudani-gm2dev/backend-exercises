@@ -105,7 +105,6 @@ export async function createNewUserRole(userRoleData) {
 
   usersRoles.map((userRole) => {
     if (_.isEqual(userRole.dataValues, newUserRole)) {
-      console.log(userRole.dataValues, newUserRole);
       throw createError(400, "Bad request", "User role already exists");
     }
   });
