@@ -48,6 +48,9 @@ const createMatchSchema = Joi.object({
 });
 
 const updateMatchSchema = Joi.object({
+  name: Joi.string().required(),
+  location: Joi.string().required(),
+  match_date: Joi.date().iso().required(),
   status: Joi.string().valid("finished", "in progress", "cancelled").optional(),
 
   home_team: Joi.object({

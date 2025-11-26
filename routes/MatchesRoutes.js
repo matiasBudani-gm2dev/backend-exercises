@@ -10,10 +10,9 @@ import {
 } from "../service/MatchesService.js";
 import { createMatchSchema } from "../schemas/MatchSchemas.js";
 import { schemaReqValidation } from "../middleware/validation.js";
-import { authorizeRoles} from "../middleware/authentication.js"
+import { authorizeRoles } from "../middleware/authentication.js";
 
-matchesRouter.get("/", 
-  async (req, res, next) => {
+matchesRouter.get("/", async (req, res, next) => {
   try {
     const matches = await getAllMatches();
     res.status(200).send(matches);
@@ -22,8 +21,7 @@ matchesRouter.get("/",
   }
 });
 
-matchesRouter.get("/:id", 
-  async (req, res, next) => {
+matchesRouter.get("/:id", async (req, res, next) => {
   try {
     const matchId = Number(req.params.id);
     const matches = await getMatchById(matchId);
@@ -34,7 +32,7 @@ matchesRouter.get("/:id",
 });
 
 matchesRouter.post(
-  "/", 
+  "/",
   authorizeRoles(["admin"]),
   schemaReqValidation(createMatchSchema),
   async (req, res, next) => {
@@ -48,17 +46,19 @@ matchesRouter.post(
   },
 );
 
-matchesRouter.patch("/:id", 
+matchesRouter.patch(
+  "/:id",
   authorizeRoles(["admin"]),
   async (req, res, next) => {
-  try {
-    const id = Number(req.params.id);
-    const matchData = req.body;
-    await updateMatch(id, matchData);
-    res.sendStatus(200);
-  } catch (err) {
-    next(err);
-  }
-});
+    try {
+      const id = Number(req.params.id);
+      const matchData = req.body;
+      const match = await updateMatch(id, matchData);
+      res.status(200).send(match);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 export default matchesRouter;

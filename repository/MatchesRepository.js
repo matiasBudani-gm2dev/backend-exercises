@@ -3,6 +3,8 @@ import Matches from "../models/MatchesModel.js";
 import TeamsPlayers from "../models/TeamsPlayersModel.js";
 import Teams from "../models/TeamsModel.js";
 
+const matchPk = "match_id";
+
 export async function findAllMatches() {
   return baseRepository.findAll(Matches);
 }
@@ -25,6 +27,6 @@ export async function saveMatch(matchData, options = {}) {
   return baseRepository.create(Matches, matchData, options);
 }
 
-export async function updateMatch(matchId, matchData, options = {}) {
-  return baseRepository.update(Matches, matchData);
+export async function updateMatchById(matchId, matchData, options = {}) {
+  return baseRepository.update(Matches, matchData, matchPk, matchId);
 }

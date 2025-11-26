@@ -18,12 +18,12 @@ export async function getAllPlayersInfo(deleted) {
   return players;
 }
 
-export async function getPlayerById(id) {
+export async function getPlayerById(id, options = {}) {
   if (Number.isNaN(id)) {
     throw createError(400, "Bad request", "The id has to be a number");
   }
 
-  const playerResult = await findPlayerById(id);
+  const playerResult = await findPlayerById(id, options);
   if (!playerResult) {
     throw createError(404, "Not found", "Player not found");
   }
