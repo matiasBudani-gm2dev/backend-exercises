@@ -10,6 +10,11 @@ import matchesRouter from "./routes/MatchesRoutes.js";
 import statsRouter from "./routes/StatsRoutes.js";
 import { errorHandling } from "./middleware/errorHandler.js";
 
+import {
+  authenticateToken,
+  authorizeRoles,
+} from "./middleware/authentication.js";
+
 export function createApp() {
   const app = express();
 
@@ -29,19 +34,44 @@ export function createApp() {
 
   app.get("/", (_req, res) => res.json({ ok: true }));
 
-  app.use("/users", userRouter);
+  app.use(
+    "/users",
+    authenticateToken,
+    authorizeRoles(["user", "admin"]),
+    userRouter,
+  );
 
-  app.use("/roles", roleRouter);
+  app.use("/roles", authenticateToken, authorizeRoles(["admin"]), roleRouter);
 
-  app.use("/users-roles", userRolesRouter);
+  app.use(
+    "/users-roles",
+    authenticateToken,
+    authorizeRoles(["admin"]),
+    userRolesRouter,
+  );
 
   app.use("/auth", authRouter);
 
-  app.use("/players", playersRouter);
+  app.use(
+    "/players",
+    authenticateToken,
+    authorizeRoles(["user", "admin"]),
+    playersRouter,
+  );
 
-  app.use("teams", teamsRoutes);
+  app.use(
+    "/teams",
+    authenticateToken,
+    authorizeRoles(["user", "admin"]),
+    teamsRoutes,
+  );
 
-  app.use("/matches", matchesRouter);
+  app.use(
+    "/matches",
+    authenticateToken,
+    authorizeRoles(["user", "admin"]),
+    matchesRouter,
+  );
 
   app.use("/stats", statsRouter);
 

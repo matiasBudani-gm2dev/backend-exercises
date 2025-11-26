@@ -32,7 +32,9 @@ const createMatchSchema = Joi.object({
   homeTeam: Joi.object({
     name: Joi.string().required(),
     playersIds: Joi.array()
-      .items(Joi.number().integer().positive().min(5).max(9))
+      .items(Joi.number().integer().positive())
+      .min(5)
+      .max(9)
       .required(),
   }).required(),
 

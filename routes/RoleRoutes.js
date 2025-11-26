@@ -30,8 +30,6 @@ const requiredFields = ["role_name"];
 
 roleRouter.get(
   "/",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const roles = await getAllRolesInfo();
@@ -51,8 +49,6 @@ roleRouter.get(
 
 roleRouter.get(
   "/:id",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
@@ -71,8 +67,6 @@ roleRouter.get(
 
 roleRouter.post(
   "/",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   schemaReqValidation(createRoleSchema),
   async (req, res, next) => {
     try {
@@ -92,8 +86,6 @@ roleRouter.post(
 
 roleRouter.put(
   "/:id",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   schemaReqValidation(updateCompleteRoleSchema),
   async (req, res, next) => {
     try {
@@ -117,8 +109,6 @@ roleRouter.put(
 
 roleRouter.patch(
   "/:id",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   schemaReqValidation(updatePartialRoleSchema),
   async (req, res, next) => {
     try {
@@ -142,8 +132,6 @@ roleRouter.patch(
 
 roleRouter.delete(
   "/:id",
-  authenticateToken,
-  authorizeRoles(["admin"]),
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
