@@ -24,21 +24,17 @@ import {
   schemaResValidation,
 } from "../middleware/validation.js";
 
-
-userRolesRouter.get(
-  "/",
-  async (req, res, next) => {
-    try {
-      const usersRoles = await getAllUsersRoles();
-      usersRoles.map((userRole) => {
-        schemaResValidation(getUserRolesSchema);
-      });
-      res.status(200).send(usersRoles);
-    } catch (err) {
-      next(err);
-    }
-  },
-);
+userRolesRouter.get("/", async (req, res, next) => {
+  try {
+    const usersRoles = await getAllUsersRoles();
+    usersRoles.map((userRole) => {
+      schemaResValidation(getUserRolesSchema);
+    });
+    res.status(200).send(usersRoles);
+  } catch (err) {
+    next(err);
+  }
+});
 
 userRolesRouter.get(
   "/:id",
@@ -62,49 +58,40 @@ userRolesRouter.get(
   },
 );
 
-userRolesRouter.get(
-  "/users/:id",
-  async (req, res, next) => {
-    try {
-      const id = Number(req.params.id);
-      const users = await getAllUsersWithSpecificRoleInfo(id);
+userRolesRouter.get("/users/:id", async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const users = await getAllUsersWithSpecificRoleInfo(id);
 
-      users.map((user) => {
-        const isError = schemaResValidation(getUserSchema, user);
-        if (isError) {
-          res.status(400).send(isError);
-        } else {
-          res.status(200).send(users);
-        }
-      });
-    } catch (err) {
-      next(err);
-    }
-  },
-);
-
-userRolesRouter.get(
-  "/roles/:id",
-  async (req, res, next) => {
-    try {
-      const id = Number(req.params.id);
-      const userWithRoles = await getAllRolesFromUser(id);
-
-      const isError = schemaResValidation(
-        getUserWithRolesSchema,
-        userWithRoles,
-      );
+    users.map((user) => {
+      const isError = schemaResValidation(getUserSchema, user);
       if (isError) {
         res.status(400).send(isError);
         return;
       }
+    });
+    res.status(200).send(users);
+  } catch (err) {
+    next(err);
+  }
+});
 
-      res.status(200).send(userWithRoles);
-    } catch (err) {
-      next(err);
+userRolesRouter.get("/roles/:id", async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const userWithRoles = await getAllRolesFromUser(id);
+
+    const isError = schemaResValidation(getUserWithRolesSchema, userWithRoles);
+    if (isError) {
+      res.status(400).send(isError);
+      return;
     }
-  },
-);
+
+    res.status(200).send(userWithRoles);
+  } catch (err) {
+    next(err);
+  }
+});
 
 userRolesRouter.post(
   "/:id",
@@ -152,19 +139,16 @@ userRolesRouter.put(
   },
 );
 
-userRolesRouter.delete(
-  "/:id",
-  async (req, res, next) => {
-    const user_id = Number(req.params.id);
-    const user = await updateNewUserRoles({ roles_ids: [], user_id });
-    user.roles = [{ roleId: 2, roleName: "el papu" }];
-    const isError = schemaResValidation(deleteUserWithEmptyRolesSchema, user);
-    if (isError) {
-      res.status(400).send(isError);
-      return;
-    }
-    res.status(200).send(user);
-  },
-);
+userRolesRouter.delete("/:id", async (req, res, next) => {
+  const user_id = Number(req.params.id);
+  const user = await updateNewUserRoles({ roles_ids: [], user_id });
+  user.roles = [{ roleId: 2, roleName: "el papu" }];
+  const isError = schemaResValidation(deleteUserWithEmptyRolesSchema, user);
+  if (isError) {
+    res.status(400).send(isError);
+    return;
+  }
+  res.status(200).send(user);
+});
 
 export default userRolesRouter;
