@@ -103,6 +103,19 @@ export async function getAllMatches() {
   return matches;
 }
 
+export async function getAllMatchesStats() {
+  const [[{ totalMatches }]] = await sequelize.query(
+    "SELECT COUNT(*) as totalMatches FROM matches",
+  );
+  const [[{ totalGoals, totalAssists }]] = await sequelize.query(
+    "SELECT COUNT(goals) as totalGoals, COUNT(assists) AS totalAssists FROM teams_players",
+  );
+  const [[{ activePlayers }]] = await sequelize.query(
+    "SELECT COUNT(*) as activePlayers FROM players WHERE deleted = 0",
+  );
+  return { totalMatches, totalGoals, totalAssists, activePlayers };
+}
+
 export async function getMatchById(matchId) {
   const matchesResult = await findMatchById(matchId);
 

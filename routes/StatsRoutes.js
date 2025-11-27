@@ -6,7 +6,7 @@ const statsRouter = express.Router();
 statsRouter.get("/", async (req, res, next) => {
   try {
     const [[{ activePlayers, averageRating }]] = await sequelize.query(
-      "SELECT COUNT(*) as activePlayers, ROUND(AVG(rating), 2) as averageRating FROM players WHERE deleted = 0",
+      "SELECT COUNT(*) as activePlayers, COALESCE(ROUND(AVG(rating), 2), 0) as averageRating FROM players WHERE deleted = 0",
     );
     const [[{ totalGoals, totalAssists }]] = await sequelize.query(
       "SELECT COUNT(goals) as totalGoals, COUNT(assists) AS totalAssists FROM teams_players",

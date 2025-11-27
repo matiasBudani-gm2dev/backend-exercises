@@ -4,6 +4,7 @@ const matchesRouter = express.Router();
 
 import {
   getAllMatches,
+  getAllMatchesStats,
   getMatchById,
   createMatch,
   updateMatch,
@@ -12,10 +13,19 @@ import { createMatchSchema } from "../schemas/MatchSchemas.js";
 import { schemaReqValidation } from "../middleware/validation.js";
 import { authorizeRoles } from "../middleware/authentication.js";
 
-matchesRouter.get("/", async (req, res, next) => {
+matchesRouter.get("/", async (_req, res, next) => {
   try {
     const matches = await getAllMatches();
     res.status(200).send(matches);
+  } catch (err) {
+    next(err);
+  }
+});
+
+matchesRouter.get("/stats", async (_req, res, next) => {
+  try {
+    const stats = await getAllMatchesStats();
+    res.status(200).send(stats);
   } catch (err) {
     next(err);
   }
