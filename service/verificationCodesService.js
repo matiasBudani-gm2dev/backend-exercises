@@ -31,10 +31,10 @@ export async function generateCodeForUser(userId) {
   await resend.emails.send({
     from: process.env.EMAIL_FROM,
     to: [user.email],
-    subject: "Código de verificación",
-    html: `<h1>Este es tu código de verificación</h1>
-      <h2>${code}</h2>
-      <p>Tu codigo vence en 15 minutos.</p>`,
+    subject: "Registro de email",
+    html: `<h1>Email registrado con éxito.</h1>
+      <h2>Te registraste correctamente.</h2>
+  `,
   });
 }
 
