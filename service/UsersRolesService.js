@@ -26,7 +26,6 @@ export async function getUserWithRoles(userId) {
   const user = await getUserById(userId);
 
   const roles = await findAllRolesFromUser(userId);
-
   const userWithRoles = { ...user, roles };
 
   return userWithRoles;
