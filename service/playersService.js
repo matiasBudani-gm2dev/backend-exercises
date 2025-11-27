@@ -37,7 +37,6 @@ export async function getPlayerByNick(nick) {
   const nickFilter = { nick: nick };
 
   const playerResult = await findPlayerByNick(nickFilter);
-  console.log(playerResult);
 
   if (!playerResult) {
     throw createError(404, "Not found", "Player not found");

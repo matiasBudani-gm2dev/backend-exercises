@@ -16,9 +16,7 @@ export async function getAllRolesInfo() {
 
 export async function getRoleById(id) {
   const role = await findRoleById(id);
-  console.log(role);
   if (!role) {
-    console.log("entre aca entonces");
     throw createError(404, "Role not found", "Role wasnt found");
   }
   return role;

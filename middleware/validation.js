@@ -15,7 +15,6 @@ export function schemaReqValidation(schema) {
         {},
       );
 
-      console.log(invalid_fields);
       res.status(400).send({ invalid_fields });
       return;
     } else {

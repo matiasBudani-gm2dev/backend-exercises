@@ -200,17 +200,13 @@ export async function createMatch(matchData) {
     await Promise.all(
       homePlayersIds.map(async (playerId) => {
         const player = await getPlayerById(playerId, { transaction: t });
-        console.log(player);
 
         if (!player) {
-          console.log("oaushdoasuhdoiasuh");
           throw createError(
             404,
             "Not found",
             `Player ID ${playerId} not found`,
           );
-        } else {
-          console.log("Jugador esta re bien");
         }
         await saveTeamPlayer(
           { team_id: homeTeam.team_id, player_id: playerId },

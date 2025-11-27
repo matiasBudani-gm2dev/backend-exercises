@@ -99,8 +99,6 @@ export async function createNewUserRole(userRoleData) {
     throw createError(500, "Internal server error", "User role not created");
   }
 
-  console.log("holaaaaa");
-
   const usersRoles = await getAllUsersRoles();
 
   usersRoles.map((userRole) => {
