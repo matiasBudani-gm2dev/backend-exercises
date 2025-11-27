@@ -108,12 +108,17 @@ export async function getAllMatchesStats() {
     "SELECT COUNT(*) as totalMatches FROM matches",
   );
   const [[{ totalGoals, totalAssists }]] = await sequelize.query(
-    "SELECT COUNT(goals) as totalGoals, COUNT(assists) AS totalAssists FROM teams_players",
+    "SELECT COALESCE(SUM(goals), 0) as totalGoals, COALESCE(SUM(assists), 0) AS totalAssists FROM teams_players",
   );
   const [[{ activePlayers }]] = await sequelize.query(
     "SELECT COUNT(*) as activePlayers FROM players WHERE deleted = 0",
   );
-  return { totalMatches, totalGoals, totalAssists, activePlayers };
+  return {
+    totalMatches,
+    totalGoals: Number(totalGoals),
+    totalAssists: Number(totalAssists),
+    activePlayers,
+  };
 }
 
 export async function getMatchById(matchId) {
